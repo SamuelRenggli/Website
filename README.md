@@ -3,7 +3,7 @@
 Website von Manuel Stähelin, Bergführer: <https://manuelstaehelin.ch>
 
 Deutsch unter `/`, Englisch unter `/en/`. Gebaut mit [Astro](https://astro.build), gehostet auf GitHub Pages.
-**Lokal testen:** siehe [TESTING.md](TESTING.md). **Live schalten:** siehe [GO-LIVE.md](GO-LIVE.md). Jeder Push auf `main` wird automatisch
+**Lokal testen:** siehe [TESTING.md](TESTING.md). **Live schalten:** siehe [GO-LIVE.md](GO-LIVE.md). **Offene Punkte:** [TODO.md](TODO.md). Jeder Push auf `main` wird automatisch
 veröffentlicht (siehe Tab **Actions** auf GitHub, dauert ca. 2 bis 4 Minuten).
 
 ## Lokal starten
