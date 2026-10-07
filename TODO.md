@@ -45,11 +45,11 @@ In the code, open points are marked with `TODO`.
 ## Technical tasks
 
 ### Before going live (see [GO-LIVE.md](GO-LIVE.md))
-- [ ] Test everything locally with the checklist in [TESTING.md](TESTING.md)
-- [ ] Sign in to GitHub with the CLI (`gh auth login`)
-- [ ] Create the repository `manu-am-berg` and push
-- [ ] Turn on GitHub Pages and test on `<github-user>.github.io/manu-am-berg`
-- [ ] Find out how email for `manuelstaehelin.ch` runs today (Metanet?), so the DNS change does not break it
+- [x] Test everything locally with the checklist in [TESTING.md](TESTING.md)
+- [x] Sign in to GitHub with the CLI (`gh auth login`)
+- [x] Create the repository (`SamuelRenggli/Website`) and push
+- [x] Turn on GitHub Pages and test on `samuelrenggli.github.io/Website`
+- [x] Find out how email for `manuelstaehelin.ch` runs today (Metanet, via `mail.manuelstaehelin.ch`, not affected by the DNS change)
 - [ ] Change DNS records at Metanet, connect the domain on GitHub, enforce HTTPS
 - [ ] Verify the domain on GitHub (TXT record) against takeover
 

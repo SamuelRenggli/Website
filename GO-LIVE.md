@@ -68,7 +68,7 @@ Or on github.com: repository, **Settings**, **Pages**, Source: **GitHub Actions*
 Watch progress in the **Actions** tab (first run takes about 5 minutes, later runs 1 to 2).
 The site is then online at:
 
-**https://<github-user>.github.io/manu-am-berg/**
+**https://samuelrenggli.github.io/Website/**
 
 Test it there (also on your phone) before switching the domain.
 
@@ -78,8 +78,9 @@ The domain stays at Metanet; you only change its DNS records.
 Do **not** change the name servers (NS1/NS2.URBANUS.METANET.CH stay).
 
 1. Log in to the Metanet customer area, open the DNS zone of `manuelstaehelin.ch`.
-2. Delete the existing **A** and **AAAA** records for `@` (they point to the WordPress hosting).
-   Note their old values somewhere, so you can switch back if needed.
+2. Delete the existing **A** record for `@` and the **A** record for `www`
+   (both `80.74.140.2`, the WordPress hosting; status 7 Oct 2026, there is no AAAA record).
+   Keep this value: to switch back, set both to `80.74.140.2` again.
 3. Add:
 
    | Type | Name | Value |
@@ -95,6 +96,7 @@ Do **not** change the name servers (NS1/NS2.URBANUS.METANET.CH stay).
    | CNAME | www | `<github-user>.github.io.` |
 
 4. **Do not touch MX, SPF/TXT or `mail` records.** They handle email (e.g. info@manuelstaehelin.ch).
+   Email runs via `mail.manuelstaehelin.ch` (own A record `80.74.140.2`), so it keeps working.
 
 ## 7. Connect the domain on GitHub
 
