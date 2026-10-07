@@ -22,6 +22,7 @@ To test on your phone: run `npm run dev -- --host`, then open the "Network" addr
 (e.g. `http://192.168.1.23:4321`) on a phone in the same Wi-Fi.
 
 Before going live, also run `npm run build`. It checks the code and fails on errors.
+The full test checklist is in [TESTING.md](TESTING.md).
 
 ## 2. Before going live: content checklist
 
