@@ -2,22 +2,32 @@
 import Icon from './Icon.astro';
 import { site } from '../config';
 import { winter, summer } from '../data/offers';
+import { ui, type Lang } from '../i18n';
 
-const steps = [
-  { title: 'Anfrage', text: 'Schreib mir, was du vorhast: Ziel, Zeitraum, Erfahrung und wie viele ihr seid.' },
-  { title: 'Planung', text: 'Ich schlage dir eine passende Tour vor und kläre Verhältnisse, Hütte und Ausrüstung.' },
-  { title: 'Unterwegs', text: 'Wir treffen uns am Ausgangspunkt und gehen los. Ich schaue unterwegs auf Wetter, Schnee und Tempo.' },
-];
-const options = [...winter, ...summer].map((o) => o.title);
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].contact;
+const options = [...winter, ...summer].map((o) => o.title[lang]);
+// Texts the browser script needs
+const messages = {
+  mailOpened: t.mailOpened,
+  sending: t.sending,
+  sent: t.sent,
+  failed: t.failed,
+  subject: t.subject,
+  labels: t.mailLabels,
+};
 ---
 
 <section class="contact section" id="kontakt" aria-labelledby="contact-title">
   <div class="wrap grid">
     <div class="info">
-      <h2 id="contact-title">Kontakt</h2>
+      <h2 id="contact-title">{t.title}</h2>
       <ol class="steps">
         {
-          steps.map((s) => (
+          t.steps.map((s) => (
             <li>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
@@ -42,37 +52,37 @@ const options = [...winter, ...summer].map((o) => o.title);
       </ul>
     </div>
 
-    <form class="form" method="post" action={site.formEndpoint || undefined} data-form data-email={site.email} novalidate>
+    <form class="form" method="post" action={site.formEndpoint || undefined} data-form data-email={site.email} data-messages={JSON.stringify(messages)} novalidate>
       <div class="field">
-        <label for="f-name">Name</label>
+        <label for="f-name">{t.name}</label>
         <input id="f-name" name="name" autocomplete="name" required />
-        <p class="error" id="f-name-err" hidden>Bitte gib deinen Namen an.</p>
+        <p class="error" id="f-name-err" hidden>{t.nameErr}</p>
       </div>
       <div class="field">
-        <label for="f-email">E-Mail</label>
+        <label for="f-email">{t.email}</label>
         <input id="f-email" name="email" type="email" autocomplete="email" required />
-        <p class="error" id="f-email-err" hidden>Bitte gib eine gültige E-Mail-Adresse an.</p>
+        <p class="error" id="f-email-err" hidden>{t.emailErr}</p>
       </div>
       <div class="row">
         <div class="field">
-          <label for="f-offer">Was möchtest du machen?</label>
+          <label for="f-offer">{t.offer}</label>
           <select id="f-offer" name="angebot">
             {options.map((o) => <option>{o}</option>)}
-            <option>Etwas anderes</option>
+            <option>{t.other}</option>
           </select>
         </div>
         <div class="field">
-          <label for="f-date">Wunschdatum</label>
-          <input id="f-date" name="datum" placeholder="z.B. Mitte Februar" />
+          <label for="f-date">{t.date}</label>
+          <input id="f-date" name="datum" placeholder={t.datePh} />
         </div>
       </div>
       <div class="field">
-        <label for="f-msg">Nachricht</label>
+        <label for="f-msg">{t.msg}</label>
         <textarea id="f-msg" name="nachricht" rows="5" required></textarea>
-        <p class="hint">Ziel, Erfahrung, Anzahl Personen: alles, was mir bei der Planung hilft.</p>
-        <p class="error" id="f-msg-err" hidden>Bitte schreib mir kurz, was du vorhast.</p>
+        <p class="hint">{t.msgHint}</p>
+        <p class="error" id="f-msg-err" hidden>{t.msgErr}</p>
       </div>
-      <button class="btn btn-primary" type="submit">Anfrage senden</button>
+      <button class="btn btn-primary" type="submit">{t.submit}</button>
       <p class="status" role="status" data-status></p>
     </form>
   </div>
@@ -82,6 +92,7 @@ const options = [...winter, ...summer].map((o) => o.title);
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;
   const status = form.querySelector<HTMLElement>('[data-status]')!;
   const email = form.dataset.email!;
+  const m = JSON.parse(form.dataset.messages!);
 
   const validate = () => {
     let first: HTMLElement | null = null;
@@ -105,21 +116,21 @@ const options = [...winter, ...summer].map((o) => o.title);
 
     // No form service configured: open the visitor's mail app with the request filled in
     if (!form.getAttribute('action')) {
-      const subject = `Anfrage: ${data.get('angebot')}`;
-      const body = `Name: ${data.get('name')}\nE-Mail: ${data.get('email')}\nAngebot: ${data.get('angebot')}\nWunschdatum: ${data.get('datum') || '-'}\n\n${data.get('nachricht')}`;
+      const subject = `${m.subject}: ${data.get('angebot')}`;
+      const body = `${m.labels.name}: ${data.get('name')}\n${m.labels.email}: ${data.get('email')}\n${m.labels.offer}: ${data.get('angebot')}\n${m.labels.date}: ${data.get('datum') || '-'}\n\n${data.get('nachricht')}`;
       window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = 'Dein Mailprogramm öffnet sich mit der fertigen Anfrage.';
+      status.textContent = m.mailOpened;
       return;
     }
 
-    status.textContent = 'Anfrage wird gesendet …';
+    status.textContent = m.sending;
     try {
       const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
       if (!res.ok) throw new Error(String(res.status));
       form.reset();
-      status.textContent = 'Danke, deine Anfrage ist angekommen. Ich melde mich so bald wie möglich.';
+      status.textContent = m.sent;
     } catch {
-      status.textContent = `Senden hat nicht geklappt. Schreib mir bitte direkt an ${email}.`;
+      status.textContent = `${m.failed} ${email}.`;
     }
   });
 </script>

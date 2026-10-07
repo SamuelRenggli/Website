@@ -4,19 +4,25 @@ import Photo from './Photo.astro';
 import Icon from './Icon.astro';
 import { gallery } from '../data/gallery';
 import { photo } from '../data/photos';
+import { ui, type Lang } from '../i18n';
 
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].gallery;
 const INITIAL = 12;
 const items = await Promise.all(
   gallery.map(async (g) => {
     const large = await getImage({ src: photo(g.photo), width: 2000, format: 'webp' });
-    return { ...g, large: large.src };
+    return { photo: g.photo, alt: g.alt[lang], large: large.src };
   }),
 );
 ---
 
 <section class="gallery section" id="galerie" aria-labelledby="gallery-title">
   <div class="wrap">
-    <h2 id="gallery-title">Galerie</h2>
+    <h2 id="gallery-title">{t.title}</h2>
     <ul class="grid" data-gallery>
       {
         items.map((g, i) => (
@@ -31,22 +37,22 @@ const items = await Promise.all(
     {
       items.length > INITIAL && (
         <button class="btn btn-quiet more" type="button" data-more>
-          Alle {items.length} Fotos zeigen
+          {t.more(items.length)}
         </button>
       )
     }
   </div>
 
-  <dialog class="lightbox" aria-label="Foto vergrössert" data-lightbox>
+  <dialog class="lightbox" aria-label={t.dialog} data-lightbox>
     <img alt="" data-lightbox-img />
     <button class="lb-btn close" type="button" data-close>
-      <Icon name="x" /><span class="visually-hidden">Schliessen</span>
+      <Icon name="x" /><span class="visually-hidden">{t.close}</span>
     </button>
     <button class="lb-btn prev" type="button" data-prev>
-      <Icon name="caret-left" /><span class="visually-hidden">Vorheriges Foto</span>
+      <Icon name="caret-left" /><span class="visually-hidden">{t.prev}</span>
     </button>
     <button class="lb-btn next" type="button" data-next>
-      <Icon name="caret-right" /><span class="visually-hidden">Nächstes Foto</span>
+      <Icon name="caret-right" /><span class="visually-hidden">{t.next}</span>
     </button>
   </dialog>
 </section>

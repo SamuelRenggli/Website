@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import About from './About.astro';
+import Offers from './Offers.astro';
+import Clips from './Clips.astro';
+import Gallery from './Gallery.astro';
+import Contact from './Contact.astro';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<Base lang={lang} overlayHeader>
+  <Hero lang={lang} />
+  <Offers lang={lang} />
+  <About lang={lang} />
+  <Clips lang={lang} />
+  <Gallery lang={lang} />
+  <Contact lang={lang} />
+</Base>

@@ -1,33 +1,35 @@
 ---
 import Photo from './Photo.astro';
-import { url } from '../config';
+import { ui, localePath, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].about;
 ---
 
-<!-- TODO: Manu to rewrite this text in his own words -->
 <section class="about section" id="ueber-mich" aria-labelledby="about-title">
   <div class="wrap grid">
     <figure class="portrait">
-      <Photo
-        slug="manu-portrait"
-        alt="Manuel Stähelin in oranger Jacke vor einem Wolkenmeer"
-        sizes="(max-width: 760px) 100vw, 45vw"
-      />
+      <Photo slug="manu-portrait" alt={t.portraitAlt} sizes="(max-width: 760px) 100vw, 45vw" />
     </figure>
     <div class="text">
-      <h2 id="about-title">Ich bin Manu.</h2>
-      <p class="lede">
-        Bergführer, Skitourengeher und am liebsten dort, wo die Spur noch frisch ist.
-      </p>
-      <p>
-        Im Winter bin ich mit Ski unterwegs, auf Touren, im Pulver und über Gletscher. Im Sommer geht es auf
-        Hochtouren, über Grate und an den Fels. Ich plane jede Tour nach den aktuellen Verhältnissen und nach dem,
-        was du dir vorstellst.
-      </p>
-      <p>
-        Mir ist wichtig, dass du sicher unterwegs bist, unterwegs etwas lernst und den Tag am Berg geniesst. Ob
-        erste Skitour oder grosser Gipfel: Wir finden das passende Ziel.
-      </p>
-      <a class="btn btn-quiet" href={url('#kontakt')}>Tour anfragen</a>
+      <h2 id="about-title">{t.title}</h2>
+      <p class="lede">{t.lede}</p>
+      <p>{t.p1}</p>
+      <p>{t.p2}</p>
+      <dl class="facts">
+        {
+          t.facts.map(([term, value]) => (
+            <div>
+              <dt>{term}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <a class="btn btn-quiet" href={`${localePath(lang)}#kontakt`}>{ui[lang].cta}</a>
     </div>
   </div>
 </section>
@@ -56,15 +58,37 @@ import { url } from '../config';
     display: grid;
     gap: 1.5rem;
     justify-items: start;
-    padding-top: clamp(0rem, 6vw, 5rem);
+    padding-top: clamp(0rem, 4vw, 3rem);
   }
   .text > p:not(.lede) {
     max-width: 62ch;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  dt {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  dd {
+    margin: 0.2rem 0 0;
+    font-weight: 650;
+    line-height: 1.35;
   }
   @media (max-width: 760px) {
     .portrait,
     .text {
       grid-column: 1 / -1;
+    }
+    .facts {
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
   }
 </style>

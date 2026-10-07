@@ -2,7 +2,8 @@
 
 Website von Manuel Stähelin, Bergführer: <https://manuelstaehelin.ch>
 
-Gebaut mit [Astro](https://astro.build), gehostet auf GitHub Pages. Jeder Push auf `main` wird automatisch
+Deutsch unter `/`, Englisch unter `/en/`. Gebaut mit [Astro](https://astro.build), gehostet auf GitHub Pages.
+**Live schalten:** siehe [GO-LIVE.md](GO-LIVE.md). Jeder Push auf `main` wird automatisch
 veröffentlicht (siehe Tab **Actions** auf GitHub, dauert ca. 2 bis 4 Minuten).
 
 ## Lokal starten
@@ -12,20 +13,20 @@ Voraussetzung: [Node.js](https://nodejs.org) 22 oder neuer.
 ```bash
 npm install
 npm run dev        # Vorschau mit Live-Reload auf http://localhost:4321
-npm run build      # fertige Website in dist/
+npm run build      # prüft den Code und baut die fertige Website in dist/
 ```
 
 ## Wo ändere ich was?
 
 | Was | Datei |
 | --- | --- |
-| E-Mail, Telefon, Instagram, Adresse, Formular-Dienst | `src/config.ts` |
-| Angebote Winter / Sommer | `src/data/offers.ts` |
-| Fotos in der Galerie (Reihenfolge, Beschreibung) | `src/data/gallery.ts` |
-| Text "Über mich" | `src/components/About.astro` |
-| Startbild-Text und Video | `src/components/Hero.astro` |
+| E-Mail, Telefon (leer = ausgeblendet), Instagram, Adresse, Formular-Dienst | `src/config.ts` |
+| Alle Texte Deutsch + Englisch (Startbild, Über mich, Kontakt, Menü) | `src/i18n.ts` |
+| Angebote Winter / Sommer (DE + EN) | `src/data/offers.ts` |
+| Fotos in der Galerie (Reihenfolge, Beschreibung DE + EN) | `src/data/gallery.ts` |
+| Startbild-Video | `src/components/Hero.astro` |
 | Farben, Schrift | `src/styles/global.css` |
-| Impressum / Datenschutz | `src/pages/impressum.astro`, `src/pages/datenschutz.astro` |
+| Impressum / Datenschutz | `src/pages/impressum.astro`, `src/pages/datenschutz.astro`, Englisch in `src/pages/en/` |
 
 Kleine Textänderungen gehen auch direkt im Browser auf github.com: Datei öffnen, Stift-Symbol, ändern,
 "Commit changes". Die Website aktualisiert sich danach automatisch.
@@ -43,14 +44,4 @@ Die Originale liegen lokal im Ordner `Manu Bergführer Content/` (nicht im Git, 
 
 ## Domain
 
-Die Domain `manuelstaehelin.ch` ist bei Metanet registriert. Für GitHub Pages zeigen die DNS-Einträge auf GitHub:
-
-| Typ | Name | Wert |
-| --- | --- | --- |
-| A | @ | 185.199.108.153 |
-| A | @ | 185.199.109.153 |
-| A | @ | 185.199.110.153 |
-| A | @ | 185.199.111.153 |
-| CNAME | www | `<github-user>.github.io` |
-
-Danach auf GitHub: Settings, Pages, Custom domain `manuelstaehelin.ch`, "Enforce HTTPS" aktivieren.
+Domain und DNS-Umstellung bei Metanet: siehe [GO-LIVE.md](GO-LIVE.md).

@@ -1,6 +1,14 @@
 ---
 import Icon from './Icon.astro';
 import { url } from '../config';
+import { ui, localePath, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const home = localePath(lang);
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -22,20 +30,24 @@ import { url } from '../config';
 
   <div class="content wrap">
     <h1 id="hero-title"><span>Manu am Berg</span></h1>
-    <p class="sub">
-      Bergführer in den Schweizer Alpen. Skitouren, Freeride, Hochtouren und Klettern, privat oder in kleinen
-      Gruppen.
-    </p>
+    <p class="sub">{t.hero.sub}</p>
     <div class="actions">
-      <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
-      <a class="btn btn-quiet" href={url('#angebot')}>Angebot ansehen</a>
+      <a class="btn btn-primary" href={`${home}#kontakt`}>{t.cta}</a>
+      <a class="btn btn-quiet" href={`${home}#angebot`}>{t.hero.secondary}</a>
     </div>
   </div>
 
-  <button class="pause" type="button" aria-pressed="false" data-hero-pause>
+  <button
+    class="pause"
+    type="button"
+    aria-pressed="false"
+    data-hero-pause
+    data-pause-label={t.hero.pause}
+    data-play-label={t.hero.play}
+  >
     <span data-icon-pause><Icon name="pause" /></span>
     <span data-icon-play hidden><Icon name="play" /></span>
-    <span class="visually-hidden">Hintergrundvideo anhalten</span>
+    <span class="visually-hidden">{t.hero.pause}</span>
   </button>
 </section>
 
@@ -50,9 +62,7 @@ import { url } from '../config';
     btn.setAttribute('aria-pressed', String(paused));
     btn.querySelector('[data-icon-pause]')!.toggleAttribute('hidden', paused);
     btn.querySelector('[data-icon-play]')!.toggleAttribute('hidden', !paused);
-    btn.querySelector('.visually-hidden')!.textContent = paused
-      ? 'Hintergrundvideo abspielen'
-      : 'Hintergrundvideo anhalten';
+    btn.querySelector('.visually-hidden')!.textContent = paused ? btn.dataset.playLabel! : btn.dataset.pauseLabel!;
   };
   if (reduce.matches) set(true);
   btn.addEventListener('click', () => set(!video.paused));

@@ -1,0 +1,23 @@
+---
+import Text from '../../layouts/Text.astro';
+import { site } from '../../config';
+---
+
+<Text lang="en" title="Imprint">
+  <h2>Responsible for content</h2>
+  <p>{site.address.map((line) => <>{line}<br /></>)}</p>
+  <p>Email: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+  {site.phone && <p>Phone: {site.phone}</p>}
+
+  <h2>Disclaimer</h2>
+  <p>
+    The content of this website was created with care, but no guarantee is given for its accuracy, completeness or
+    timeliness. Mountain tours involve risks; the arrangements made before each tour apply.
+  </p>
+
+  <h2>Copyright</h2>
+  <p>
+    Photos and videos on this website belong to {site.person} or the respective photographers (Samuel Renggli,
+    Tobin Meyers). Use requires permission.
+  </p>
+</Text>

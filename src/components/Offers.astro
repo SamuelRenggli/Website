@@ -2,19 +2,25 @@
 import Photo from './Photo.astro';
 import Icon from './Icon.astro';
 import { winter, summer } from '../data/offers';
-import { url } from '../config';
+import { site } from '../config';
+import { ui, localePath, type Lang } from '../i18n';
 
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
 const seasons = [
-  { id: 'winter', label: 'Winter', icon: 'snowflake', offers: winter },
-  { id: 'sommer', label: 'Sommer', icon: 'sun', offers: summer },
+  { id: 'winter', label: t.offers.winter, icon: 'snowflake', offers: winter },
+  { id: 'sommer', label: t.offers.summer, icon: 'sun', offers: summer },
 ];
 ---
 
 <section class="offers section" id="angebot" aria-labelledby="offers-title">
   <div class="wrap">
     <div class="head">
-      <h2 id="offers-title">Angebot</h2>
-      <div class="switch" role="tablist" aria-label="Saison wählen" data-tabs>
+      <h2 id="offers-title">{t.offers.title}</h2>
+      <div class="switch" role="tablist" aria-label={t.offers.seasonLabel} data-tabs>
         {
           seasons.map((s, i) => (
             <button
@@ -40,13 +46,13 @@ const seasons = [
             <article class={`offer offer-${n + 1}`}>
               <Photo
                 slug={o.photo}
-                alt={o.alt}
+                alt={o.alt[lang]}
                 sizes={n === 0 || n === 3 ? '(max-width: 760px) 100vw, 58vw' : '(max-width: 760px) 100vw, 40vw'}
               />
               <div class="body">
-                <h3>{o.title}</h3>
-                <p class="season">{o.season}</p>
-                <p>{o.text}</p>
+                <h3>{o.title[lang]}</h3>
+                <p class="season">{o.season[lang]}</p>
+                <p>{o.text[lang]}</p>
               </div>
             </article>
           ))}
@@ -54,9 +60,18 @@ const seasons = [
       ))
     }
 
-    <div class="note">
-      <p>Alle Touren führe ich privat oder in kleinen Gruppen. Preise und Daten auf Anfrage.</p>
-      <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
+    <div class="note" id="tarife">
+      <div class="note-text">
+        <p class="note-main">{t.offers.note}</p>
+        <p>
+          <strong>{`${t.offers.rates}: `}</strong>{`${t.offers.ratesText} `}<a
+            href={site.ratesUrl}
+            target="_blank"
+            rel="noopener">{t.offers.ratesLink}</a
+          >{', '}<a href={t.offers.avbUrl} target="_blank" rel="noopener">{t.offers.avbLink}</a>
+        </p>
+      </div>
+      <a class="btn btn-primary" href={`${localePath(lang)}#kontakt`}>{t.cta}</a>
     </div>
   </div>
 </section>
@@ -179,8 +194,15 @@ const seasons = [
     padding-top: 2rem;
     border-top: 1px solid var(--line);
   }
-  .note p {
-    max-width: 52ch;
+  .note-text {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 60ch;
+  }
+  .note-text p:not(.note-main) {
+    color: var(--muted);
+  }
+  .note-main {
     font-size: var(--step-1);
     line-height: 1.4;
   }

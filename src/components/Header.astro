@@ -1,38 +1,55 @@
 ---
 import Icon from './Icon.astro';
-import { site, url } from '../config';
+import { site } from '../config';
+import { ui, localePath, switchPath, type Lang } from '../i18n';
 
 interface Props {
+  lang: Lang;
   overlay?: boolean;
 }
-const { overlay = false } = Astro.props;
+const { lang, overlay = false } = Astro.props;
+const t = ui[lang];
+const home = localePath(lang);
 const links = [
-  { href: url('#angebot'), label: 'Angebot' },
-  { href: url('#ueber-mich'), label: 'Über mich' },
-  { href: url('#filme'), label: 'Filme' },
-  { href: url('#galerie'), label: 'Galerie' },
+  { href: `${home}#angebot`, label: t.nav.offers },
+  { href: `${home}#ueber-mich`, label: t.nav.about },
+  { href: `${home}#filme`, label: t.nav.clips },
+  { href: `${home}#galerie`, label: t.nav.gallery },
 ];
+const otherLang = lang === 'de' ? 'en' : 'de';
+const otherHref = switchPath(lang, Astro.url.pathname);
 ---
 
 <header class="header" data-overlay={overlay ? '' : undefined} data-header>
   <div class="bar wrap">
-    <a class="brand" href={url()}>{site.name}</a>
-    <nav aria-label="Hauptnavigation">
+    <a class="brand" href={home}>{site.name}</a>
+    <nav aria-label={t.navLabel}>
       <ul class="links">
         {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
       </ul>
     </nav>
-    <a class="btn btn-primary cta" href={url('#kontakt')}>Tour anfragen</a>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-btn>
+    <a class="lang" href={otherHref} hreflang={otherLang} lang={otherLang} aria-label={t.switchLabel}>
+      {otherLang.toUpperCase()}
+    </a>
+    <a class="btn btn-primary cta" href={`${home}#kontakt`}>{t.cta}</a>
+    <button
+      class="menu-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-btn
+      data-open-label={t.menuOpen}
+      data-close-label={t.menuClose}
+    >
       <Icon name="list" />
-      <span class="visually-hidden">Menü öffnen</span>
+      <span class="visually-hidden">{t.menuOpen}</span>
     </button>
   </div>
   <div class="sheet" id="mobile-menu" hidden data-menu>
     <ul>
       {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
     </ul>
-    <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
+    <a class="btn btn-primary" href={`${home}#kontakt`}>{t.cta}</a>
   </div>
 </header>
 
@@ -48,11 +65,11 @@ const links = [
 
   const setOpen = (open: boolean) => {
     btn.setAttribute('aria-expanded', String(open));
-    btn.querySelector('.visually-hidden')!.textContent = open ? 'Menü schliessen' : 'Menü öffnen';
+    btn.querySelector('.visually-hidden')!.textContent = open ? btn.dataset.closeLabel! : btn.dataset.openLabel!;
     menu.hidden = !open;
     header.toggleAttribute('data-open', open);
   };
-  btn.addEventListener('click', () => setOpen(menu.hidden));
+  btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
   menu.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('a')) setOpen(false);
   });
@@ -116,9 +133,19 @@ const links = [
     font-weight: 550;
     text-decoration: none;
   }
-  .links a:hover {
+  .links a:hover,
+  .lang:hover {
     text-decoration: underline;
     text-decoration-color: var(--signal);
+  }
+  .lang {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    margin-inline: -0.75rem;
+    font-weight: 650;
+    text-decoration: none;
   }
   .cta {
     min-height: 2.75rem;
@@ -158,6 +185,9 @@ const links = [
   }
 
   @media (max-width: 860px) {
+    .bar {
+      gap: 1.25rem;
+    }
     .links,
     .cta {
       display: none;

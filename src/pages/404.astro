@@ -1,9 +1,12 @@
 ---
 import Text from '../layouts/Text.astro';
-import { url } from '../config';
+import { ui, localePath } from '../i18n';
+const t = ui.de.notFound;
+const en = ui.en.notFound;
 ---
 
-<Text title="Seite nicht gefunden">
-  <p>Diese Seite gibt es nicht oder nicht mehr.</p>
-  <p><a class="btn btn-primary" href={url()}>Zur Startseite</a></p>
+<Text lang="de" title={t.title}>
+  <p>{t.text}</p>
+  <p lang="en">{en.text}</p>
+  <p><a class="btn btn-primary" href={localePath('de')}>{t.home}</a></p>
 </Text>

@@ -1,6 +1,13 @@
 ---
 import Icon from './Icon.astro';
-import { site, url } from '../config';
+import { site } from '../config';
+import { ui, localePath, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
 const year = new Date().getFullYear();
 ---
 
@@ -8,7 +15,7 @@ const year = new Date().getFullYear();
   <div class="wrap grid">
     <div>
       <p class="name">{site.name}</p>
-      <p class="muted">{site.person}, {site.role}</p>
+      <p class="muted">{site.person}, {t.role}</p>
     </div>
     <ul class="contact">
       <li>
@@ -36,10 +43,10 @@ const year = new Date().getFullYear();
       }
     </ul>
     <div class="meta">
-      <p>Fotos: Tobin Meyers und weitere</p>
+      <p>{t.footer.photos}</p>
       <p>
-        <a href={url('impressum/')}>Impressum</a>
-        <a href={url('datenschutz/')}>Datenschutz</a>
+        <a href={localePath(lang, 'impressum/')}>{t.footer.imprint}</a>
+        <a href={localePath(lang, 'datenschutz/')}>{t.footer.privacy}</a>
       </p>
       <p class="muted">© {year} {site.person}</p>
     </div>
