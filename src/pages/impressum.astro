@@ -1,0 +1,25 @@
+---
+import Text from '../layouts/Text.astro';
+import { site } from '../config';
+---
+
+<!-- TODO: fill in the real postal address in src/config.ts -->
+<Text title="Impressum">
+  <h2>Verantwortlich für den Inhalt</h2>
+  <p>{site.address.map((line) => <>{line}<br /></>)}</p>
+  <p>E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+  {site.phone && <p>Telefon: {site.phone}</p>}
+
+  <h2>Haftungsausschluss</h2>
+  <p>
+    Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Für Richtigkeit, Vollständigkeit und Aktualität wird
+    keine Gewähr übernommen. Touren im Gebirge sind mit Risiken verbunden; massgebend sind die Absprachen vor der
+    jeweiligen Tour.
+  </p>
+
+  <h2>Urheberrechte</h2>
+  <p>
+    Fotos und Videos auf dieser Website gehören {site.person} bzw. den jeweiligen Fotografinnen und Fotografen
+    (u.a. Tobin Meyers). Eine Verwendung ist nur mit Zustimmung erlaubt.
+  </p>
+</Text>

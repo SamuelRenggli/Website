@@ -1,0 +1,156 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../config';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <video
+    class="media"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={url('media/hero-poster.jpg')}
+    aria-hidden="true"
+    data-hero-video
+  >
+    <source src={url('media/hero-720.mp4')} type="video/mp4" media="(max-width: 900px)" />
+    <source src={url('media/hero-1080.mp4')} type="video/mp4" />
+  </video>
+  <div class="scrim"></div>
+
+  <div class="content wrap">
+    <h1 id="hero-title"><span>Manu am Berg</span></h1>
+    <p class="sub">
+      Bergführer in den Schweizer Alpen. Skitouren, Freeride, Hochtouren und Klettern, privat oder in kleinen
+      Gruppen.
+    </p>
+    <div class="actions">
+      <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
+      <a class="btn btn-quiet" href={url('#angebot')}>Angebot ansehen</a>
+    </div>
+  </div>
+
+  <button class="pause" type="button" aria-pressed="false" data-hero-pause>
+    <span data-icon-pause><Icon name="pause" /></span>
+    <span data-icon-play hidden><Icon name="play" /></span>
+    <span class="visually-hidden">Hintergrundvideo anhalten</span>
+  </button>
+</section>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]')!;
+  const btn = document.querySelector<HTMLButtonElement>('[data-hero-pause]')!;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const set = (paused: boolean) => {
+    if (paused) video.pause();
+    else video.play().catch(() => {});
+    btn.setAttribute('aria-pressed', String(paused));
+    btn.querySelector('[data-icon-pause]')!.toggleAttribute('hidden', paused);
+    btn.querySelector('[data-icon-play]')!.toggleAttribute('hidden', !paused);
+    btn.querySelector('.visually-hidden')!.textContent = paused
+      ? 'Hintergrundvideo abspielen'
+      : 'Hintergrundvideo anhalten';
+  };
+  if (reduce.matches) set(true);
+  btn.addEventListener('click', () => set(!video.paused));
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: 100svh;
+    overflow: hidden;
+    color: #fff;
+    background: var(--ink);
+  }
+  .media,
+  .scrim {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .media {
+    object-fit: cover;
+  }
+  .scrim {
+    background:
+      linear-gradient(to top, rgb(15 38 56 / 0.78) 0%, rgb(15 38 56 / 0.25) 45%, transparent 70%),
+      linear-gradient(to bottom, rgb(15 38 56 / 0.45), transparent 22%);
+  }
+
+  .content {
+    position: relative;
+    display: grid;
+    gap: 1.5rem;
+    padding-block: 8rem clamp(2rem, 5vw, 3.5rem);
+  }
+  h1 {
+    order: 3;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    font-size: clamp(3.25rem, 14vw, 11.5rem);
+    font-weight: 820;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  h1 span {
+    display: block;
+    padding-bottom: 0.06em;
+    animation: rise 1100ms var(--ease-out) both;
+  }
+  .sub {
+    max-width: 34ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    animation: fade 700ms 450ms ease both;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    animation: fade 700ms 600ms ease both;
+  }
+
+  .pause {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(2rem, 5vw, 3.5rem);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1.5px solid rgb(255 255 255 / 0.6);
+    border-radius: var(--pill);
+    background: rgb(15 38 56 / 0.35);
+    color: #fff;
+    cursor: pointer;
+  }
+  .pause:hover {
+    background: rgb(15 38 56 / 0.6);
+  }
+
+  @keyframes rise {
+    from {
+      transform: translateY(105%);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .pause {
+      top: 5rem;
+      bottom: auto;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import Icon from './Icon.astro';
+import { site, url } from '../config';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap grid">
+    <div>
+      <p class="name">{site.name}</p>
+      <p class="muted">{site.person}, {site.role}</p>
+    </div>
+    <ul class="contact">
+      <li>
+        <a href={`mailto:${site.email}`}><Icon name="envelope-simple" />{site.email}</a>
+      </li>
+      {
+        site.phone && (
+          <li>
+            <a href={`tel:${site.phone.replace(/\s/g, '')}`}>
+              <Icon name="phone" />
+              {site.phone}
+            </a>
+          </li>
+        )
+      }
+      {
+        site.instagram && (
+          <li>
+            <a href={site.instagram} rel="me noopener" target="_blank">
+              <Icon name="instagram-logo" />
+              Instagram
+            </a>
+          </li>
+        )
+      }
+    </ul>
+    <div class="meta">
+      <p>Fotos: Tobin Meyers und weitere</p>
+      <p>
+        <a href={url('impressum/')}>Impressum</a>
+        <a href={url('datenschutz/')}>Datenschutz</a>
+      </p>
+      <p class="muted">© {year} {site.person}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: 4rem 3rem;
+    background: var(--surface);
+    font-size: var(--step--1);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .name {
+    font-stretch: var(--wide);
+    font-weight: 780;
+    font-size: var(--step-1);
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .contact {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+  .contact a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--signal);
+  }
+  .meta {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .meta a {
+    margin-right: 1.25rem;
+  }
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

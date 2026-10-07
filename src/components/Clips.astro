@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../config';
+
+const clips = [
+  { file: 'clip-fafler-abfahrt', ratio: '9 / 16', grow: 0.5625, label: 'Abfahrt im Lötschental bei der Fafleralp' },
+  { file: 'clip-pulver', ratio: '9 / 16', grow: 0.5625, label: 'Pulverschnee unter tiefblauem Himmel' },
+  { file: 'clip-fafler-wald', ratio: '4 / 5', grow: 0.8, label: 'Durch den Lärchenwald ins Tal' },
+];
+---
+
+<section class="clips section" id="filme" aria-labelledby="clips-title">
+  <div class="wrap grid">
+    <div class="intro">
+      <h2 id="clips-title">Unterwegs gefilmt</h2>
+      <p class="lede">Kurze Clips von Touren der letzten Winter.</p>
+    </div>
+    <ul class="reel">
+      {
+        clips.map((c) => (
+          <li style={`--ratio: ${c.ratio}; --grow: ${c.grow}`}>
+            <video
+              src={url(`media/${c.file}.mp4`)}
+              poster={url(`media/${c.file}.jpg`)}
+              preload="none"
+              playsinline
+              aria-label={c.label}
+              data-clip
+            />
+            <button class="play" type="button" data-play>
+              <Icon name="play" />
+              <span class="visually-hidden">Video abspielen: {c.label}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  const items = [...document.querySelectorAll<HTMLLIElement>('.reel li')];
+  const videos = items.map((li) => li.querySelector<HTMLVideoElement>('[data-clip]')!);
+
+  items.forEach((li, i) => {
+    const video = videos[i];
+    const btn = li.querySelector<HTMLButtonElement>('[data-play]')!;
+    btn.addEventListener('click', () => {
+      // Only one clip plays at a time
+      videos.forEach((v) => v !== video && v.pause());
+      video.controls = true;
+      video.play();
+      video.focus();
+    });
+    video.addEventListener('play', () => li.setAttribute('data-playing', ''));
+    video.addEventListener('pause', () => li.removeAttribute('data-playing'));
+  });
+</script>
+
+<style>
+  .clips {
+    background: var(--surface);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2.4fr);
+    gap: var(--gutter);
+    align-items: end;
+  }
+  .intro {
+    display: grid;
+    gap: 1.25rem;
+    align-self: start;
+  }
+  .reel {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .reel li {
+    position: relative;
+    flex: var(--grow) 1 0;
+    min-width: 0;
+    aspect-ratio: var(--ratio);
+    background: var(--ink);
+  }
+  .reel video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    border: 0;
+    background: linear-gradient(to top, rgb(15 38 56 / 0.35), transparent 50%);
+    color: #fff;
+    cursor: pointer;
+  }
+  .play :global(.icon) {
+    width: 4rem;
+    height: 4rem;
+    padding: 1.1rem;
+    border-radius: var(--pill);
+    background: var(--signal);
+    color: var(--on-signal);
+    transition: transform 160ms var(--ease-out);
+  }
+  .play:hover :global(.icon) {
+    transform: scale(1.06);
+  }
+  [data-playing] .play,
+  .reel li:has(video[controls]) .play {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .reel {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .reel li {
+      flex: none;
+      height: 70svh;
+      width: auto;
+      max-height: 34rem;
+      scroll-snap-align: center;
+    }
+  }
+</style>

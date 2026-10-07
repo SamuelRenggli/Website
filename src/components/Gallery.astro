@@ -1,0 +1,206 @@
+---
+import { getImage } from 'astro:assets';
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { gallery } from '../data/gallery';
+import { photo } from '../data/photos';
+
+const INITIAL = 12;
+const items = await Promise.all(
+  gallery.map(async (g) => {
+    const large = await getImage({ src: photo(g.photo), width: 2000, format: 'webp' });
+    return { ...g, large: large.src };
+  }),
+);
+---
+
+<section class="gallery section" id="galerie" aria-labelledby="gallery-title">
+  <div class="wrap">
+    <h2 id="gallery-title">Galerie</h2>
+    <ul class="grid" data-gallery>
+      {
+        items.map((g, i) => (
+          <li hidden={i >= INITIAL}>
+            <button type="button" data-index={i} data-large={g.large} data-alt={g.alt}>
+              <Photo slug={g.photo} alt={g.alt} sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw" />
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+    {
+      items.length > INITIAL && (
+        <button class="btn btn-quiet more" type="button" data-more>
+          Alle {items.length} Fotos zeigen
+        </button>
+      )
+    }
+  </div>
+
+  <dialog class="lightbox" aria-label="Foto vergrössert" data-lightbox>
+    <img alt="" data-lightbox-img />
+    <button class="lb-btn close" type="button" data-close>
+      <Icon name="x" /><span class="visually-hidden">Schliessen</span>
+    </button>
+    <button class="lb-btn prev" type="button" data-prev>
+      <Icon name="caret-left" /><span class="visually-hidden">Vorheriges Foto</span>
+    </button>
+    <button class="lb-btn next" type="button" data-next>
+      <Icon name="caret-right" /><span class="visually-hidden">Nächstes Foto</span>
+    </button>
+  </dialog>
+</section>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-gallery]')!;
+  const buttons = [...grid.querySelectorAll<HTMLButtonElement>('button[data-index]')];
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]')!;
+  const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+  let current = 0;
+
+  document.querySelector('[data-more]')?.addEventListener('click', (e) => {
+    grid.querySelectorAll('li[hidden]').forEach((li) => li.removeAttribute('hidden'));
+    (e.currentTarget as HTMLElement).remove();
+  });
+
+  const show = (i: number) => {
+    current = (i + buttons.length) % buttons.length;
+    img.src = buttons[current].dataset.large!;
+    img.alt = buttons[current].dataset.alt!;
+  };
+
+  buttons.forEach((b, i) =>
+    b.addEventListener('click', () => {
+      show(i);
+      dialog.showModal();
+    }),
+  );
+  dialog.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+  dialog.querySelector('[data-prev]')!.addEventListener('click', () => show(current - 1));
+  dialog.querySelector('[data-next]')!.addEventListener('click', () => show(current + 1));
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+  // Click on the dark backdrop closes
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  // Return focus to the thumbnail that is shown when closing
+  dialog.addEventListener('close', () => {
+    buttons[current].closest('li')!.removeAttribute('hidden');
+    buttons[current].focus();
+  });
+
+  // Swipe on touch devices
+  let x0: number | null = null;
+  dialog.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+  dialog.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+</script>
+
+<style>
+  h2 {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  /* Masonry via CSS columns keeps every photo in its natural format */
+  .grid {
+    columns: 4 16rem;
+    column-gap: clamp(0.5rem, 1.2vw, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .grid li {
+    break-inside: avoid;
+    margin-bottom: clamp(0.5rem, 1.2vw, 1rem);
+  }
+  .grid button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--surface);
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+  .grid :global(img) {
+    width: 100%;
+    height: auto;
+    transition: transform 500ms var(--ease-out);
+  }
+  .grid button:hover :global(img) {
+    transform: scale(1.03);
+  }
+  .more {
+    margin-top: 2rem;
+  }
+
+  .lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .lightbox::backdrop {
+    background: rgb(8 20 30 / 0.94);
+  }
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+  }
+  .lightbox img {
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 6rem);
+    object-fit: contain;
+  }
+  .lb-btn {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 0;
+    border-radius: var(--pill);
+    background: rgb(255 255 255 / 0.12);
+    color: #fff;
+    cursor: pointer;
+  }
+  .lb-btn:hover {
+    background: rgb(255 255 255 / 0.24);
+  }
+  .close {
+    top: 1rem;
+    right: 1rem;
+  }
+  .prev,
+  .next {
+    top: 50%;
+    translate: 0 -50%;
+  }
+  .prev {
+    left: 1rem;
+  }
+  .next {
+    right: 1rem;
+  }
+  @media (max-width: 600px) {
+    .grid {
+      columns: 2;
+    }
+    .prev,
+    .next {
+      top: auto;
+      bottom: 1rem;
+      translate: none;
+    }
+  }
+</style>

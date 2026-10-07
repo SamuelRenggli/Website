@@ -1,0 +1,203 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { winter, summer } from '../data/offers';
+import { url } from '../config';
+
+const seasons = [
+  { id: 'winter', label: 'Winter', icon: 'snowflake', offers: winter },
+  { id: 'sommer', label: 'Sommer', icon: 'sun', offers: summer },
+];
+---
+
+<section class="offers section" id="angebot" aria-labelledby="offers-title">
+  <div class="wrap">
+    <div class="head">
+      <h2 id="offers-title">Angebot</h2>
+      <div class="switch" role="tablist" aria-label="Saison wählen" data-tabs>
+        {
+          seasons.map((s, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${s.id}`}
+              aria-controls={`panel-${s.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              <Icon name={s.icon} />
+              {s.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      seasons.map((s, i) => (
+        <div class="panel" role="tabpanel" id={`panel-${s.id}`} aria-labelledby={`tab-${s.id}`} hidden={i !== 0}>
+          {s.offers.map((o, n) => (
+            <article class={`offer offer-${n + 1}`}>
+              <Photo
+                slug={o.photo}
+                alt={o.alt}
+                sizes={n === 0 || n === 3 ? '(max-width: 760px) 100vw, 58vw' : '(max-width: 760px) 100vw, 40vw'}
+              />
+              <div class="body">
+                <h3>{o.title}</h3>
+                <p class="season">{o.season}</p>
+                <p>{o.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      ))
+    }
+
+    <div class="note">
+      <p>Alle Touren führe ich privat oder in kleinen Gruppen. Preise und Daten auf Anfrage.</p>
+      <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const tablist = document.querySelector<HTMLElement>('[data-tabs]')!;
+  const tabs = [...tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+  const select = (tab: HTMLButtonElement, focus = true) => {
+    for (const t of tabs) {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
+    }
+    if (focus) tab.focus();
+  };
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        select(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]);
+      }
+    });
+  });
+
+  // Open the season that is currently running: summer from May to October
+  const month = new Date().getMonth();
+  if (month >= 4 && month <= 9) select(tabs[1], false);
+</script>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .switch {
+    display: inline-flex;
+    padding: 0.3rem;
+    border-radius: var(--pill);
+    background: var(--surface);
+  }
+  .switch button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 0;
+    border-radius: var(--pill);
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+  .switch button[aria-selected='true'] {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  /* Asymmetric 2x2: wide + narrow, then narrow + wide */
+  .panel {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: clamp(2.5rem, 5vw, 4rem) var(--gutter);
+    animation: show 380ms ease both;
+  }
+  .offer-1,
+  .offer-4 {
+    grid-column: span 7;
+  }
+  .offer-2,
+  .offer-3 {
+    grid-column: span 5;
+  }
+  .offer-2 {
+    margin-top: clamp(0rem, 8vw, 7rem);
+  }
+  .offer :global(img) {
+    width: 100%;
+    height: clamp(16rem, 34vw, 32rem);
+    object-fit: cover;
+  }
+  .offer-2 :global(img),
+  .offer-3 :global(img) {
+    height: clamp(16rem, 28vw, 26rem);
+  }
+  .body {
+    display: grid;
+    gap: 0.4rem;
+    max-width: 52ch;
+    padding-top: 1.25rem;
+  }
+  .season {
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-weight: 550;
+  }
+  .body p:last-child {
+    margin-top: 0.4rem;
+  }
+
+  .note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .note p {
+    max-width: 52ch;
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+
+  @keyframes show {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .offer-1,
+    .offer-2,
+    .offer-3,
+    .offer-4 {
+      grid-column: 1 / -1;
+      margin-top: 0;
+    }
+  }
+</style>

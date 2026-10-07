@@ -1,0 +1,174 @@
+---
+import Icon from './Icon.astro';
+import { site, url } from '../config';
+
+interface Props {
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+const links = [
+  { href: url('#angebot'), label: 'Angebot' },
+  { href: url('#ueber-mich'), label: 'Über mich' },
+  { href: url('#filme'), label: 'Filme' },
+  { href: url('#galerie'), label: 'Galerie' },
+];
+---
+
+<header class="header" data-overlay={overlay ? '' : undefined} data-header>
+  <div class="bar wrap">
+    <a class="brand" href={url()}>{site.name}</a>
+    <nav aria-label="Hauptnavigation">
+      <ul class="links">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <a class="btn btn-primary cta" href={url('#kontakt')}>Tour anfragen</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-btn>
+      <Icon name="list" />
+      <span class="visually-hidden">Menü öffnen</span>
+    </button>
+  </div>
+  <div class="sheet" id="mobile-menu" hidden data-menu>
+    <ul>
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <a class="btn btn-primary" href={url('#kontakt')}>Tour anfragen</a>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const btn = header.querySelector<HTMLButtonElement>('[data-menu-btn]')!;
+  const menu = header.querySelector<HTMLElement>('[data-menu]')!;
+
+  // Solid background once the page is scrolled past the top
+  const onScroll = () => header.toggleAttribute('data-solid', window.scrollY > 40);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.querySelector('.visually-hidden')!.textContent = open ? 'Menü schliessen' : 'Menü öffnen';
+    menu.hidden = !open;
+    header.toggleAttribute('data-open', open);
+  };
+  btn.addEventListener('click', () => setOpen(menu.hidden));
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px);
+    transition:
+      background-color 240ms ease,
+      color 240ms ease,
+      box-shadow 240ms ease;
+  }
+  /* Over the hero video: transparent with white text until scrolled */
+  .header[data-overlay] {
+    position: fixed;
+    inset: 0 0 auto;
+  }
+  .header[data-overlay]:not([data-solid], [data-open]) {
+    background: transparent;
+    backdrop-filter: none;
+    color: #fff;
+  }
+  .header[data-solid] {
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 4.25rem;
+  }
+  .brand {
+    margin-right: auto;
+    font-stretch: var(--wide);
+    font-weight: 780;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  .links {
+    display: flex;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a {
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .links a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--signal);
+  }
+  .cta {
+    min-height: 2.75rem;
+    padding-block: 0.6rem;
+  }
+  .menu-btn {
+    display: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: var(--pill);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .menu-btn :global(.icon) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .sheet {
+    padding: 0.5rem var(--gutter) 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .sheet ul {
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+  .sheet li a {
+    display: block;
+    padding: 0.85rem 0;
+    font-stretch: var(--wide);
+    font-weight: 700;
+    font-size: var(--step-2);
+    text-decoration: none;
+  }
+
+  @media (max-width: 860px) {
+    .links,
+    .cta {
+      display: none;
+    }
+    .menu-btn {
+      display: grid;
+    }
+  }
+  @media (min-width: 861px) {
+    .sheet {
+      display: none;
+    }
+  }
+</style>

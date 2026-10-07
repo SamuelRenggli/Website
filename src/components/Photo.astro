@@ -1,0 +1,28 @@
+---
+import { Picture } from 'astro:assets';
+import { photo } from '../data/photos';
+
+interface Props {
+  slug: string;
+  alt: string;
+  sizes: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'auto';
+}
+const { slug, alt, sizes, class: className, loading = 'lazy', fetchpriority = 'auto' } = Astro.props;
+const src = photo(slug);
+const widths = [480, 800, 1200, 1600, 2400].filter((w) => w <= src.width);
+---
+
+<Picture
+  src={src}
+  alt={alt}
+  widths={widths}
+  sizes={sizes}
+  formats={['avif', 'webp']}
+  class={className}
+  loading={loading}
+  decoding="async"
+  fetchpriority={fetchpriority}
+/>

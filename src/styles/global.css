@@ -1,0 +1,214 @@
+@import '@fontsource-variable/archivo/wdth.css';
+
+/*
+  Design tokens
+  Palette is taken from the photos: snow, glacier ice, the deep blue of high-altitude sky,
+  rock grey, and the signal orange of Manu's jacket as the single accent.
+  Shape rule: photos and panels are square-cornered; interactive controls are full pills.
+*/
+:root {
+  --snow: #f2f5f7;
+  --ice: #dde6ec;
+  --ink: #0f2638;
+  --rock: #4f5d68;
+  --line: rgb(15 38 56 / 0.14);
+  --signal: #f07428;
+  --on-signal: #0f2638;
+
+  --bg: var(--snow);
+  --surface: var(--ice);
+  --text: var(--ink);
+  --muted: var(--rock);
+
+  --font: 'Archivo Variable', system-ui, sans-serif;
+  --wide: 125%;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3125rem;
+  --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
+  --step-3: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
+
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --section: clamp(5rem, 10vw, 9rem);
+  --max: 88rem;
+  --pill: 999px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1c29;
+    --surface: #132a3b;
+    --text: #e9eff3;
+    --muted: #9fb0bd;
+    --line: rgb(233 239 243 / 0.14);
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-stretch: var(--wide);
+  font-weight: 780;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: var(--step-3);
+}
+
+h3 {
+  font-size: var(--step-1);
+  line-height: 1.2;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section);
+}
+
+.lede {
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Buttons: pill-shaped, one primary style (signal) and one quiet style */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--pill);
+  font: inherit;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.btn-primary:hover {
+  background: #f68a45;
+}
+
+.btn-quiet {
+  border-color: currentColor;
+  background: transparent;
+  color: inherit;
+}
+
+.btn-quiet:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

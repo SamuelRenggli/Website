@@ -1,0 +1,257 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../config';
+import { winter, summer } from '../data/offers';
+
+const steps = [
+  { title: 'Anfrage', text: 'Schreib mir, was du vorhast: Ziel, Zeitraum, Erfahrung und wie viele ihr seid.' },
+  { title: 'Planung', text: 'Ich schlage dir eine passende Tour vor und kläre Verhältnisse, Hütte und Ausrüstung.' },
+  { title: 'Unterwegs', text: 'Wir treffen uns am Ausgangspunkt und gehen los. Ich schaue unterwegs auf Wetter, Schnee und Tempo.' },
+];
+const options = [...winter, ...summer].map((o) => o.title);
+---
+
+<section class="contact section" id="kontakt" aria-labelledby="contact-title">
+  <div class="wrap grid">
+    <div class="info">
+      <h2 id="contact-title">Kontakt</h2>
+      <ol class="steps">
+        {
+          steps.map((s) => (
+            <li>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <ul class="direct">
+        <li>
+          <a href={`mailto:${site.email}`}><Icon name="envelope-simple" />{site.email}</a>
+        </li>
+        {
+          site.phone && (
+            <li>
+              <a href={`tel:${site.phone.replace(/\s/g, '')}`}>
+                <Icon name="phone" />
+                {site.phone}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </div>
+
+    <form class="form" method="post" action={site.formEndpoint || undefined} data-form data-email={site.email} novalidate>
+      <div class="field">
+        <label for="f-name">Name</label>
+        <input id="f-name" name="name" autocomplete="name" required />
+        <p class="error" id="f-name-err" hidden>Bitte gib deinen Namen an.</p>
+      </div>
+      <div class="field">
+        <label for="f-email">E-Mail</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required />
+        <p class="error" id="f-email-err" hidden>Bitte gib eine gültige E-Mail-Adresse an.</p>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="f-offer">Was möchtest du machen?</label>
+          <select id="f-offer" name="angebot">
+            {options.map((o) => <option>{o}</option>)}
+            <option>Etwas anderes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-date">Wunschdatum</label>
+          <input id="f-date" name="datum" placeholder="z.B. Mitte Februar" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-msg">Nachricht</label>
+        <textarea id="f-msg" name="nachricht" rows="5" required></textarea>
+        <p class="hint">Ziel, Erfahrung, Anzahl Personen: alles, was mir bei der Planung hilft.</p>
+        <p class="error" id="f-msg-err" hidden>Bitte schreib mir kurz, was du vorhast.</p>
+      </div>
+      <button class="btn btn-primary" type="submit">Anfrage senden</button>
+      <p class="status" role="status" data-status></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const status = form.querySelector<HTMLElement>('[data-status]')!;
+  const email = form.dataset.email!;
+
+  const validate = () => {
+    let first: HTMLElement | null = null;
+    for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]')) {
+      const err = document.getElementById(`${el.id}-err`)!;
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      err.hidden = ok;
+      el.setAttribute('aria-invalid', String(!ok));
+      if (ok) el.removeAttribute('aria-describedby');
+      else el.setAttribute('aria-describedby', err.id);
+      if (!ok && !first) first = el;
+    }
+    first?.focus();
+    return !first;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    const data = new FormData(form);
+
+    // No form service configured: open the visitor's mail app with the request filled in
+    if (!form.getAttribute('action')) {
+      const subject = `Anfrage: ${data.get('angebot')}`;
+      const body = `Name: ${data.get('name')}\nE-Mail: ${data.get('email')}\nAngebot: ${data.get('angebot')}\nWunschdatum: ${data.get('datum') || '-'}\n\n${data.get('nachricht')}`;
+      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      status.textContent = 'Dein Mailprogramm öffnet sich mit der fertigen Anfrage.';
+      return;
+    }
+
+    status.textContent = 'Anfrage wird gesendet …';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      status.textContent = 'Danke, deine Anfrage ist angekommen. Ich melde mich so bald wie möglich.';
+    } catch {
+      status.textContent = `Senden hat nicht geklappt. Schreib mir bitte direkt an ${email}.`;
+    }
+  });
+</script>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(3rem, 7vw, 7rem);
+    align-items: start;
+  }
+  .info {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .steps {
+    display: grid;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.25rem 1rem;
+    counter-increment: step;
+  }
+  .steps li::before {
+    content: counter(step);
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--pill);
+    background: var(--signal);
+    color: var(--on-signal);
+    font-weight: 750;
+  }
+  .steps p {
+    color: var(--muted);
+    max-width: 46ch;
+  }
+  .direct {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .direct a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .form {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    background: var(--surface);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  label {
+    font-weight: 600;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid color-mix(in srgb, var(--text) 35%, transparent);
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+  }
+  textarea {
+    resize: vertical;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline-offset: 0;
+    border-color: var(--text);
+  }
+  ::placeholder {
+    color: var(--muted);
+  }
+  [aria-invalid='true'] {
+    border-color: #b3261e;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .error {
+    color: #b3261e;
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  @media (prefers-color-scheme: dark) {
+    .error {
+      color: #ffb4ab;
+    }
+    [aria-invalid='true'] {
+      border-color: #ffb4ab;
+    }
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  .status:empty {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .grid,
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
