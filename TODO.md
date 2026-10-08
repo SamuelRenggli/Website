@@ -51,7 +51,8 @@ In the code, open points are marked with `TODO`.
 - [x] Turn on GitHub Pages and test on `samuelrenggli.github.io/Website`
 - [x] Find out how email for `manuelstaehelin.ch` runs today (Metanet, via `mail.manuelstaehelin.ch`, not affected by the DNS change)
 - [x] Change DNS at Metanet (Metanet DNS since 8 Oct 2026, see DNS-METANET.md) and enter the domain on GitHub
-- [ ] Enforce HTTPS on GitHub (Settings, Pages) once the certificate is ready
+- [x] Enforce HTTPS on GitHub (certificate valid for manuelstaehelin.ch and www, renews automatically)
+- [ ] Send a test email to the real mailbox and reply, to confirm email still works
 - [ ] Verify the domain on GitHub (TXT record) against takeover
 
 ### Setup
