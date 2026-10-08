@@ -39,7 +39,7 @@ In the code, open points are marked with `TODO`.
       to the use, and should he be credited differently (e.g. with a link)?
 - [ ] **Clip captions:** are the two clips (drone over powder tracks, powder under blue sky) captioned right?
       → `src/components/Clips.astro`
-- [ ] **Hero video:** keep the drone flight over the ridge, or replace with the new drone video later?
+- [x] **Hero video:** new intro film (`Intro_website.mp4`, 17 s) since Oct 2026
 - [ ] **Gallery:** any photos to remove or add?
 
 ## Technical tasks

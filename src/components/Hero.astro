@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { url } from '../config';
+import { site, url } from '../config';
 import { ui, localePath, type Lang } from '../i18n';
 
 interface Props {
@@ -30,7 +30,8 @@ const home = localePath(lang);
   <div class="scrim"></div>
 
   <div class="content wrap">
-    <h1 id="hero-title"><span>Manu am Berg</span></h1>
+    <p class="kicker">{t.hero.kicker}</p>
+    <h1 id="hero-title"><span>{site.person}</span></h1>
     <p class="sub">{t.hero.sub}</p>
     <div class="actions">
       <a class="btn btn-primary" href={`${home}#kontakt`}>{t.cta}</a>
@@ -101,14 +102,24 @@ const home = localePath(lang);
     gap: 1.5rem;
     padding-block: 8rem clamp(2rem, 5vw, 3.5rem);
   }
+  .kicker {
+    order: 3;
+    margin-bottom: -1rem;
+    font-family: var(--display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    animation: fade 700ms 300ms ease both;
+  }
   h1 {
     order: 3;
     margin-top: 0.5rem;
     overflow: hidden;
-    font-size: clamp(3.25rem, 14vw, 11.5rem);
-    font-weight: 820;
-    line-height: 0.92;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.5rem, 12.5vw, 11rem);
+    font-weight: 800;
+    line-height: 0.86;
+    letter-spacing: -0.005em;
   }
   h1 span {
     display: block;

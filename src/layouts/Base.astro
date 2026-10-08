@@ -15,7 +15,7 @@ interface Props {
 }
 const { lang, title, overlayHeader = false } = Astro.props;
 const t = ui[lang];
-const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.person}, ${t.role}`;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${t.hero.kicker}`;
 const og = await getImage({ src: photo('freeride-sonne'), width: 1200, height: 630, format: 'jpg', fit: 'cover' });
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const other = new URL(switchPath(lang, Astro.url.pathname), Astro.site);
@@ -75,7 +75,7 @@ const other = new URL(switchPath(lang, Astro.url.pathname), Astro.site);
     padding: 0.75rem 1rem;
     background: var(--signal);
     color: var(--on-signal);
-    font-weight: 650;
+    font-weight: 600;
     transform: translateY(-200%);
   }
   .skip:focus {

@@ -7,4 +7,5 @@ dist/
 .env
 .DS_Store
 Thumbs.db
-.mcp.json__pycache__/
+.mcp.json
+__pycache__/

@@ -1,4 +1,9 @@
-@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/barlow-condensed/800.css';
 
 /*
   Design tokens
@@ -20,14 +25,15 @@
   --text: var(--ink);
   --muted: var(--rock);
 
-  --font: 'Archivo Variable', system-ui, sans-serif;
-  --wide: 125%;
+  /* Type: condensed capitals for headings, like trail signs; Barlow for text */
+  --font: 'Barlow', system-ui, sans-serif;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
 
   --step--1: 0.875rem;
   --step-0: 1.0625rem;
   --step-1: 1.3125rem;
   --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
-  --step-3: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
+  --step-3: clamp(2.4rem, 1.6rem + 3.2vw, 4.2rem);
 
   --gutter: clamp(1rem, 4vw, 3.5rem);
   --section: clamp(5rem, 10vw, 9rem);
@@ -90,10 +96,11 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-stretch: var(--wide);
-  font-weight: 780;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: 0;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -102,8 +109,8 @@ h2 {
 }
 
 h3 {
-  font-size: var(--step-1);
-  line-height: 1.2;
+  font-size: var(--step-2);
+  line-height: 1.05;
 }
 
 p {
@@ -160,7 +167,7 @@ a {
   border: 2px solid transparent;
   border-radius: var(--pill);
   font: inherit;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1;
   white-space: nowrap;
   text-decoration: none;

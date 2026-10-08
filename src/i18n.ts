@@ -36,7 +36,8 @@ export const ui = {
     description:
       'Manuel Stähelin, Bergführer. Skitouren, Freeride, Hochtouren und Klettern in den Schweizer Alpen.',
     hero: {
-      sub: 'Bergführer in den Schweizer Alpen. Skitouren, Freeride, Hochtouren und Klettern, privat oder in kleinen Gruppen.',
+      kicker: 'Bergführer · Schweizer Alpen',
+      sub: 'Skitouren, Freeride, Hochtouren und Klettern. Sorgfältig geplant nach Verhältnissen und deinem Können, privat oder in kleinen Gruppen.',
       secondary: 'Angebot ansehen',
       pause: 'Hintergrundvideo anhalten',
       play: 'Hintergrundvideo abspielen',
@@ -125,7 +126,8 @@ export const ui = {
     description:
       'Manuel Stähelin, mountain guide. Ski touring, freeride, alpine tours and climbing in the Swiss Alps.',
     hero: {
-      sub: 'Mountain guide in the Swiss Alps. Ski touring, freeride, alpine tours and climbing, private or in small groups.',
+      kicker: 'Mountain guide · Swiss Alps',
+      sub: 'Ski touring, freeride, alpine tours and climbing. Carefully planned around conditions and your skills, private or in small groups.',
       secondary: 'See tours',
       pause: 'Pause background video',
       play: 'Play background video',

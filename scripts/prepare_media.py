@@ -85,10 +85,10 @@ Q = ['-x264-params', 'aq-mode=3']
 
 # (source, output, ffmpeg args) - all outputs without audio unless noted
 VIDEOS = [
-    # Hero background loop: muted, 14 s from the 4K ridge flight, three sizes
-    ('Alle_ridge.mp4', 'hero-1440.mp4', ['-ss', '15', '-t', '14', '-vf', 'scale=2560:-2', '-an', '-crf', '22', *Q]),
-    ('Alle_ridge.mp4', 'hero-1080.mp4', ['-ss', '15', '-t', '14', '-vf', 'scale=1920:-2', '-an', '-crf', '22', *Q]),
-    ('Alle_ridge.mp4', 'hero-720.mp4', ['-ss', '15', '-t', '14', '-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
+    # Hero background loop: muted, the full 17 s intro film (4K), three sizes
+    ('Intro_website.mp4', 'hero-1440.mp4', ['-vf', 'scale=2560:-2', '-an', '-crf', '22', *Q]),
+    ('Intro_website.mp4', 'hero-1080.mp4', ['-vf', 'scale=1920:-2', '-an', '-crf', '22', *Q]),
+    ('Intro_website.mp4', 'hero-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
     # Vertical clips (played on demand)
     ('20260205_133024.mp4', 'clip-pulver.mp4', ['-vf', 'scale=1080:-2', '-crf', '22', *Q, '-c:a', 'aac', '-b:a', '128k']),
     # Drone from above, 4K source, silent
@@ -97,7 +97,7 @@ VIDEOS = [
 
 # poster frames: (video output, time, poster name)
 POSTERS = [
-    ('hero-1440.mp4', '0.5', 'hero-poster.jpg'),
+    ('hero-1440.mp4', '0', 'hero-poster.jpg'),
     ('clip-pulver.mp4', '1', 'clip-pulver.jpg'),
     ('clip-drohne-spuren.mp4', '12', 'clip-drohne-spuren.jpg'),
 ]

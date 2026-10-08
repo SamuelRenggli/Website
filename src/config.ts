@@ -2,7 +2,7 @@
 // Everything marked TODO must be confirmed by Manu before going live.
 
 export const site = {
-  name: 'Manu am Berg',
+  name: 'Manuel Stähelin',
   person: 'Manuel Stähelin',
   // TODO: confirm address
   email: 'info@manuelstaehelin.ch',
