@@ -23,6 +23,7 @@ const home = localePath(lang);
     aria-hidden="true"
     data-hero-video
   >
+    <source src={url('media/hero-mobile.mp4')} type="video/mp4" media="(max-width: 900px) and (orientation: portrait)" />
     <source src={url('media/hero-720.mp4')} type="video/mp4" media="(max-width: 900px)" />
     <source src={url('media/hero-1080.mp4')} type="video/mp4" media="(max-width: 1600px)" />
     <source src={url('media/hero-1440.mp4')} type="video/mp4" />
@@ -58,16 +59,36 @@ const home = localePath(lang);
   const btn = document.querySelector<HTMLButtonElement>('[data-hero-pause]')!;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  const set = (paused: boolean) => {
-    if (paused) video.pause();
-    else video.play().catch(() => {});
+  // Paused on purpose (button or reduced-motion setting): never restart on our own
+  let held = reduce.matches;
+
+  // The button always shows the real state of the video
+  const show = (paused: boolean) => {
     btn.setAttribute('aria-pressed', String(paused));
     btn.querySelector('[data-icon-pause]')!.toggleAttribute('hidden', paused);
     btn.querySelector('[data-icon-play]')!.toggleAttribute('hidden', !paused);
     btn.querySelector('.visually-hidden')!.textContent = paused ? btn.dataset.playLabel! : btn.dataset.pauseLabel!;
   };
-  if (reduce.matches) set(true);
-  btn.addEventListener('click', () => set(!video.paused));
+  video.addEventListener('play', () => show(false));
+  video.addEventListener('pause', () => show(true));
+
+  const start = () => (held ? Promise.resolve() : video.play());
+
+  if (held) video.pause();
+  else
+    start().catch(() => {
+      // Autoplay blocked (e.g. iPhone Low Power Mode, Android Data Saver): start on the first tap
+      const retry = () => start().catch(() => {});
+      for (const e of ['touchend', 'click', 'keydown']) window.addEventListener(e, retry, { once: true, passive: true });
+      show(true);
+    });
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    held = !video.paused;
+    if (held) video.pause();
+    else video.play().catch(() => {});
+  });
 </script>
 
 <style>
@@ -166,6 +187,27 @@ const home = localePath(lang);
     from {
       opacity: 0;
       transform: translateY(8px);
+    }
+  }
+
+  /* Phones in portrait: video in a square box at the top instead of a narrow full-height crop */
+  @media (max-width: 900px) and (orientation: portrait) {
+    .media,
+    .scrim {
+      inset: 0 0 auto;
+      height: 100vw;
+    }
+    .scrim {
+      background:
+        linear-gradient(to bottom, rgb(15 38 56 / 0.5), transparent 22%),
+        linear-gradient(to top, var(--ink) 0%, rgb(15 38 56 / 0.55) 30%, transparent 60%);
+    }
+    /* Text starts just below the video instead of leaving a gap on tall phones */
+    .hero {
+      min-height: auto;
+    }
+    .content {
+      padding-top: calc(100vw - 3rem);
     }
   }
 

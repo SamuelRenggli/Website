@@ -89,6 +89,8 @@ VIDEOS = [
     ('Intro_website.mp4', 'hero-1440.mp4', ['-vf', 'scale=2560:-2', '-an', '-crf', '22', *Q]),
     ('Intro_website.mp4', 'hero-1080.mp4', ['-vf', 'scale=1920:-2', '-an', '-crf', '22', *Q]),
     ('Intro_website.mp4', 'hero-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
+    # Phones in portrait: square centre crop of the 4K source, so less of the sides is lost
+    ('Intro_website.mp4', 'hero-mobile.mp4', ['-vf', 'crop=ih:ih,scale=1080:1080', '-an', '-crf', '23', *Q]),
     # Vertical clips (played on demand)
     ('20260205_133024.mp4', 'clip-pulver.mp4', ['-vf', 'scale=1080:-2', '-crf', '22', *Q, '-c:a', 'aac', '-b:a', '128k']),
     # Drone from above, 4K source, silent
