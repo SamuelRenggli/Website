@@ -74,6 +74,9 @@ Test it there (also on your phone) before switching the domain.
 
 ## 6. Point the domain to GitHub (Metanet)
 
+> **Exact click-by-click steps with all current values: [DNS-METANET.md](DNS-METANET.md).**
+> The active DNS zone is in Plesk (https://urbanus.metanet.ch:8443), not in my.metanet.ch.
+
 The domain stays at Metanet; you only change its DNS records.
 Do **not** change the name servers (NS1/NS2.URBANUS.METANET.CH stay).
 
