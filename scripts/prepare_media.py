@@ -9,15 +9,17 @@ Requires: Pillow, pillow-heif (pip install pillow pillow-heif) and ffmpeg on PAT
   metadata (EXIF/GPS). Astro then builds AVIF/WebP variants at build time.
 - Videos are cut, scaled and compressed to H.264 MP4 for the web. Snow has
   large smooth gradients, so videos use a low CRF and aq-mode=3 against banding.
-- The raw folder is sorted into two subfolders: every file listed in PHOTOS or
-  VIDEOS goes to "Auf Website", everything else to "Nicht verwendet".
+- The folder "Auf Website" is the selection: its subfolders are themes
+  (e.g. Skitouren, Hochtouren). The script writes src/data/themes.json
+  (photo -> theme) for the gallery filter, and reports files that are in the
+  folder but not in PHOTOS/VIDEOS, or the other way round. It moves nothing.
 
-To add a photo: add a line to PHOTOS below (source file -> web name) and rerun.
-The file may sit anywhere in the raw folder; the script finds and sorts it.
+To add a photo: put it in a theme folder under "Auf Website", add a line to
+PHOTOS below (source file -> web name), add it to src/data/gallery.ts, rerun.
 Existing outputs are skipped; delete an output file to regenerate it.
 """
+import json
 import os
-import shutil
 import subprocess
 import sys
 
@@ -31,7 +33,7 @@ PHOTO_OUT = os.path.join(ROOT, 'src', 'assets', 'photos')
 VIDEO_OUT = os.path.join(ROOT, 'public', 'media')
 MAX_EDGE = 2400
 USED_DIR = 'Auf Website'
-UNUSED_DIR = 'Nicht verwendet'
+THEMES_OUT = os.path.join(ROOT, 'src', 'data', 'themes.json')
 
 # source file name -> output slug
 PHOTOS = {
@@ -61,8 +63,6 @@ PHOTOS = {
     'CLA02014(1).jpg': 'felsturm-abend',
     'CLA02046(1).jpg': 'firngipfel',
     'CLA02126.jpg': 'seilschaft-gipfel',
-    'drone10_1.7.4.jpg': 'firngrat',
-    'drone1_1.1.1.jpg': 'drohne-gipfel',
     'IMG_1464.HEIC': 'eisrinne',
     'IMG_2564.HEIC': 'sonnenuntergang',
     'IMG_6743.HEIC': 'skitour-gletscher',
@@ -78,6 +78,20 @@ PHOTOS = {
     'tobinmeyers_bellwald_feb_2026_web_7162.jpg': 'lachen-brille',
     'Negative0-24-23A(1).jpg': 'schwarznasen',
     'IMG_3594.HEIC': 'gipfelbuch',
+    'BM4_1.1.7.jpg': 'spuren-kessel',
+    'CLA03348.jpg': 'aufstieg-weit',
+    'CLA03355.jpg': 'spur-hochformat',
+    'IMG_3318.HEIC': 'grat-sonne',
+    '_DSC2972.jpg': 'steilhang',
+    'drone12_1.7.6.jpg': 'firngrat-drohne',
+    'drone9_1.7.3.jpg': 'firngrat-nah',
+    'tobinmeyers_bellwald_feb_2026_web_6839.jpg': 'pulver-wolke',
+    'tobinmeyers_bellwald_feb_2026_web_6856.jpg': 'abfahrt-gegenlicht',
+    'tobinmeyers_bellwald_feb_2026_web_6926.jpg': 'pulver-schwung',
+    'tobinmeyers_bellwald_feb_2026_web_7119.jpg': 'aufstieg-tal',
+    'tobinmeyers_bellwald_feb_2026_web_7126.jpg': 'schatten',
+    'tobinmeyers_bellwald_feb_2026_web_7147.jpg': 'spur-steil',
+    'tobinmeyers_bellwald_feb_2026_web_7578.jpg': 'pulver-schwarzweiss',
 }
 
 # Shared quality settings: CRF ~21-23 keeps snow and sky free of blocks and banding
@@ -110,17 +124,19 @@ def find_files(src):
     return {f: os.path.join(d, f) for d, _, files in os.walk(src) for f in files}
 
 
-def sort_folder(src):
-    """Move used originals to USED_DIR and all others to UNUSED_DIR."""
-    used = set(PHOTOS) | {v[0] for v in VIDEOS}
-    for name, path in find_files(src).items():
-        target = os.path.join(src, USED_DIR if name in used else UNUSED_DIR, name)
-        if os.path.normcase(path) != os.path.normcase(target):
-            os.makedirs(os.path.dirname(target), exist_ok=True)
-            shutil.move(path, target)
-    missing = sorted(used - set(find_files(src)))
-    if missing:
-        print('not in raw folder (existing outputs are kept):', ', '.join(missing))
+def check_folder(src):
+    """Compare the "Auf Website" folder with PHOTOS/VIDEOS and write the theme of each photo."""
+    used_root = os.path.join(src, USED_DIR)
+    in_folder = {f: os.path.relpath(d, used_root) for d, _, files in os.walk(used_root) for f in files}
+    listed = set(PHOTOS) | {v[0] for v in VIDEOS}
+    for name in sorted(listed - set(in_folder)):
+        print(f'listed but not in "{USED_DIR}": {name}')
+    for name in sorted(set(in_folder) - listed):
+        print(f'in "{USED_DIR}" but not listed in PHOTOS: {in_folder[name]}/{name}')
+    themes = {slug: in_folder[name] for name, slug in PHOTOS.items() if in_folder.get(name, '.') != '.'}
+    with open(THEMES_OUT, 'w', encoding='utf-8') as f:
+        json.dump(dict(sorted(themes.items())), f, ensure_ascii=False, indent=2)
+        f.write('\n')
 
 
 def photos(src):
@@ -158,6 +174,6 @@ def videos(src):
 
 if __name__ == '__main__':
     source = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'Manu Bergführer Content')
-    sort_folder(source)
+    check_folder(source)
     photos(source)
     videos(source)

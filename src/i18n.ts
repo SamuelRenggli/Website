@@ -55,7 +55,7 @@ export const ui = {
       avbUrl: 'https://sbv-asgm.ch/wp-content/uploads/6_AVB_de_20220131.pdf',
     },
     about: {
-      title: 'Morgee mitenand, ich bin Manu.',
+      title: 'Ich bin Manuel, dein Bergführer.',
       lede: 'Bergführer, Ingenieur und am liebsten dort, wo die Spur noch frisch ist.',
       p1: 'Schon früh zog es mich in die Berge: Mit sechs Jahren stand ich mit meinem Vater auf dem Piz Kesch, meiner ersten Bergtour. Nach dem Gymnasium und dem Maschinenbaustudium an der ETH habe ich mich für die Ausbildung zum Bergführer entschieden.',
       p2: 'Sicherheit am Berg steht für mich an erster Stelle. Ich plane jede Tour nach den aktuellen Verhältnissen und nach dem, was du dir vorstellst, damit du unterwegs etwas lernst und den Tag am Berg geniesst.',
@@ -73,6 +73,10 @@ export const ui = {
     },
     gallery: {
       title: 'Galerie',
+      filterLabel: 'Fotos nach Thema filtern',
+      all: 'Alle',
+      // Keys are the theme folder names in "Auf Website"
+      themes: { Skitouren: 'Skitouren', Skihochtouren: 'Skihochtouren', Hochtouren: 'Hochtouren', Gratkletterei: 'Gratklettern' } as Record<string, string>,
       more: (n: number) => `Alle ${n} Fotos zeigen`,
       dialog: 'Foto vergrössert',
       close: 'Schliessen',
@@ -145,7 +149,7 @@ export const ui = {
       avbUrl: 'https://sbv-asgm.ch/wp-content/uploads/6_AVB_de_20220131.pdf',
     },
     about: {
-      title: 'Hi, I’m Manu.',
+      title: 'I’m Manuel, your mountain guide.',
       lede: 'Mountain guide, engineer, and happiest where the track is still fresh.',
       p1: 'The mountains pulled me in early: at six I climbed Piz Kesch with my father, my first mountain tour. After high school and a degree in mechanical engineering at ETH Zurich, I decided to train as a mountain guide.',
       p2: 'Safety in the mountains comes first for me. I plan every tour around current conditions and what you have in mind, so you learn something along the way and enjoy your day out.',
@@ -163,6 +167,9 @@ export const ui = {
     },
     gallery: {
       title: 'Gallery',
+      filterLabel: 'Filter photos by theme',
+      all: 'All',
+      themes: { Skitouren: 'Ski touring', Skihochtouren: 'Ski mountaineering', Hochtouren: 'Alpine tours', Gratkletterei: 'Ridge climbing' } as Record<string, string>,
       more: (n: number) => `Show all ${n} photos`,
       dialog: 'Enlarged photo',
       close: 'Close',

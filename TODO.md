@@ -22,7 +22,7 @@ In the code, open points are marked with `TODO`.
       → `src/i18n.ts` (`role`)
 - [ ] **"Über mich" text:** is it accurate, and does it sound like him (DE and EN)?
       Includes Piz Kesch at 6, ETH mechanical engineering, safety first. → `src/i18n.ts` (`about`)
-- [ ] **Greeting:** keep "Morgee mitenand" as the heading? → `src/i18n.ts` (`about.title`)
+- [x] **Greeting:** now "Ich bin Manuel, dein Bergführer." (EN: "I'm Manuel, your mountain guide.") → `src/i18n.ts` (`about.title`)
 - [ ] **Region:** say more than "Schweizer Alpen" (e.g. Wallis, Engadin, home base)?
 
 ### Offers and prices

@@ -35,14 +35,15 @@ Kleine Textänderungen gehen auch direkt im Browser auf github.com: Datei öffne
 
 Die Originale liegen lokal im Ordner `Manu Bergführer Content/` (nicht im Git, zu gross).
 
-Das Skript sortiert den Ordner automatisch in zwei Unterordner:
-**`Auf Website`** (alles, was in `scripts/prepare_media.py` eingetragen ist) und **`Nicht verwendet`** (der Rest).
+Was auf der Website ist, bestimmt der Ordner **`Auf Website`**. Seine Unterordner sind die Themen
+(Skitouren, Skihochtouren, Hochtouren, Gratkletterei); danach filtert die Galerie. Alles andere liegt in
+**`Nicht verwendet`**. Das Skript verschiebt nichts, es meldet nur, wenn Ordner und Liste nicht zusammenpassen.
 
-1. Neues Foto irgendwo in diesen Ordner legen.
+1. Neues Foto in den passenden Themenordner unter `Auf Website` legen (neues Thema = neuer Ordner,
+   Name dann auch in `src/i18n.ts` bei `gallery.themes` eintragen).
 2. In `scripts/prepare_media.py` bei `PHOTOS` eine Zeile ergänzen: `'Dateiname.jpg': 'kurzer-name',`
 3. `npm run media` ausführen (braucht Python mit `pip install pillow pillow-heif` und ffmpeg).
-   Das Skript verkleinert die Fotos, entfernt GPS-Daten und verschiebt das Original nach `Auf Website`.
-   Ein Foto aus der Liste streichen und `npm run media` erneut ausführen: Es wandert zurück nach `Nicht verwendet`.
+   Das Skript verkleinert die Fotos, entfernt GPS-Daten und liest das Thema aus dem Ordner.
 4. Foto in `src/data/gallery.ts` oder `src/data/offers.ts` mit `kurzer-name` eintragen.
 5. Committen und pushen.
 

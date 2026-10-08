@@ -4,6 +4,7 @@ import Photo from './Photo.astro';
 import Icon from './Icon.astro';
 import { gallery } from '../data/gallery';
 import { photo } from '../data/photos';
+import themeOf from '../data/themes.json';
 import { ui, type Lang } from '../i18n';
 
 interface Props {
@@ -15,18 +16,33 @@ const INITIAL = 12;
 const items = await Promise.all(
   gallery.map(async (g) => {
     const large = await getImage({ src: photo(g.photo), width: 2000, format: 'webp' });
-    return { photo: g.photo, alt: g.alt[lang], large: large.src };
+    const theme = (themeOf as Record<string, string>)[g.photo] ?? '';
+    return { photo: g.photo, alt: g.alt[lang], large: large.src, theme };
   }),
 );
+// Filter buttons: theme folders that have photos in the gallery, in the order of t.themes
+const themes = Object.keys(t.themes).filter((k) => items.some((g) => g.theme === k));
 ---
 
 <section class="gallery section" id="galerie" aria-labelledby="gallery-title">
   <div class="wrap">
-    <h2 id="gallery-title">{t.title}</h2>
+    <div class="head">
+      <h2 id="gallery-title">{t.title}</h2>
+      <div class="filter" role="group" aria-label={t.filterLabel} data-filter>
+        <button type="button" aria-pressed="true" data-theme="">{t.all}</button>
+        {
+          themes.map((k) => (
+            <button type="button" aria-pressed="false" data-theme={k}>
+              {t.themes[k]}
+            </button>
+          ))
+        }
+      </div>
+    </div>
     <ul class="grid" data-gallery>
       {
         items.map((g, i) => (
-          <li hidden={i >= INITIAL}>
+          <li hidden={i >= INITIAL} data-theme={g.theme}>
             <button type="button" data-index={i} data-large={g.large} data-alt={g.alt}>
               <Photo slug={g.photo} alt={g.alt} sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw" />
             </button>
@@ -62,22 +78,36 @@ const items = await Promise.all(
   const buttons = [...grid.querySelectorAll<HTMLButtonElement>('button[data-index]')];
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]')!;
   const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+  const more = document.querySelector<HTMLButtonElement>('[data-more]');
+  // Photos of the selected theme; the lightbox only steps through these
+  let pool = buttons;
   let current = 0;
 
-  document.querySelector('[data-more]')?.addEventListener('click', (e) => {
+  more?.addEventListener('click', () => {
     grid.querySelectorAll('li[hidden]').forEach((li) => li.removeAttribute('hidden'));
-    (e.currentTarget as HTMLElement).remove();
+    more.remove();
   });
 
+  const filters = [...document.querySelectorAll<HTMLButtonElement>('[data-filter] button')];
+  filters.forEach((f) =>
+    f.addEventListener('click', () => {
+      const theme = f.dataset.theme!;
+      filters.forEach((o) => o.setAttribute('aria-pressed', String(o === f)));
+      pool = buttons.filter((b) => !theme || b.closest('li')!.dataset.theme === theme);
+      buttons.forEach((b) => (b.closest('li')!.hidden = !pool.includes(b)));
+      more?.remove();
+    }),
+  );
+
   const show = (i: number) => {
-    current = (i + buttons.length) % buttons.length;
-    img.src = buttons[current].dataset.large!;
-    img.alt = buttons[current].dataset.alt!;
+    current = (i + pool.length) % pool.length;
+    img.src = pool[current].dataset.large!;
+    img.alt = pool[current].dataset.alt!;
   };
 
-  buttons.forEach((b, i) =>
+  buttons.forEach((b) =>
     b.addEventListener('click', () => {
-      show(i);
+      show(pool.indexOf(b));
       dialog.showModal();
     }),
   );
@@ -94,8 +124,8 @@ const items = await Promise.all(
   });
   // Return focus to the thumbnail that is shown when closing
   dialog.addEventListener('close', () => {
-    buttons[current].closest('li')!.removeAttribute('hidden');
-    buttons[current].focus();
+    pool[current].closest('li')!.removeAttribute('hidden');
+    pool[current].focus();
   });
 
   // Swipe on touch devices
@@ -110,8 +140,40 @@ const items = await Promise.all(
 </script>
 
 <style>
-  h2 {
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
     margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  /* Same pill look as the season switch in Offers, but wrapping */
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    border-radius: 1.6rem;
+    background: var(--surface);
+  }
+  .filter button {
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 0;
+    border-radius: var(--pill);
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+  .filter button[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
   }
   /* Masonry via CSS columns keeps every photo in its natural format */
   .grid {
