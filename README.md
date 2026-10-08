@@ -35,10 +35,14 @@ Kleine Textänderungen gehen auch direkt im Browser auf github.com: Datei öffne
 
 Die Originale liegen lokal im Ordner `Manu Bergführer Content/` (nicht im Git, zu gross).
 
-1. Neues Foto in diesen Ordner legen.
+Das Skript sortiert den Ordner automatisch in zwei Unterordner:
+**`Auf Website`** (alles, was in `scripts/prepare_media.py` eingetragen ist) und **`Nicht verwendet`** (der Rest).
+
+1. Neues Foto irgendwo in diesen Ordner legen.
 2. In `scripts/prepare_media.py` bei `PHOTOS` eine Zeile ergänzen: `'Dateiname.jpg': 'kurzer-name',`
 3. `npm run media` ausführen (braucht Python mit `pip install pillow pillow-heif` und ffmpeg).
-   Das Skript verkleinert die Fotos und entfernt GPS-Daten.
+   Das Skript verkleinert die Fotos, entfernt GPS-Daten und verschiebt das Original nach `Auf Website`.
+   Ein Foto aus der Liste streichen und `npm run media` erneut ausführen: Es wandert zurück nach `Nicht verwendet`.
 4. Foto in `src/data/gallery.ts` oder `src/data/offers.ts` mit `kurzer-name` eintragen.
 5. Committen und pushen.
 

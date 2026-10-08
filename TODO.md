@@ -37,7 +37,7 @@ In the code, open points are marked with `TODO`.
 ### Photos and videos
 - [ ] **Photo credits:** all photos are by Samuel Renggli or Tobin Meyers? Does Tobin Meyers agree
       to the use, and should he be credited differently (e.g. with a link)?
-- [ ] **Clip captions:** are the "Fafler" clips from the Fafleralp (Lötschental)?
+- [ ] **Clip captions:** are the two clips (drone over powder tracks, powder under blue sky) captioned right?
       → `src/components/Clips.astro`
 - [ ] **Hero video:** keep the drone flight over the ridge, or replace with the new drone video later?
 - [ ] **Gallery:** any photos to remove or add?

@@ -86,10 +86,10 @@ export const summer: Offer[] = [
       en: 'Off-trail passes and summits without glaciers. A great way to get to know the high mountains.',
     },
     season: { de: 'Juni bis Oktober', en: 'June to October' },
-    photo: 'bergtour-wiese',
+    photo: 'bergtour-see',
     alt: {
-      de: 'Zwei Bergsteiger auf einer Alpwiese vor verschneiten Gipfeln',
-      en: 'Two hikers on an alpine meadow below snowy peaks',
+      de: 'Kleiner Bergsee auf einer Alpweide vor verschneiten Gipfeln',
+      en: 'Small mountain lake on an alpine pasture below snowy peaks',
     },
   },
   {
@@ -99,10 +99,10 @@ export const summer: Offer[] = [
       en: 'Alpine and climbing courses: rope work, crevasse rescue and building anchors, step by step.',
     },
     season: { de: 'Juni bis September', en: 'June to September' },
-    photo: 'ausbildung-hand',
+    photo: 'kurs-felsstufe',
     alt: {
-      de: 'Ein Bergsteiger hilft einem anderen mit der Hand über eine Felsstufe',
-      en: 'One climber giving another a hand up a rock step',
+      de: 'Zwei Bergsteiger mit Helm steigen über eine Felsstufe',
+      en: 'Two climbers in helmets coming up a rock step',
     },
   },
 ];
