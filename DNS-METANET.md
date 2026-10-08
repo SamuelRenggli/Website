@@ -5,6 +5,10 @@ Goal: the website comes from GitHub Pages, **email stays exactly as it is** (Met
 Status 8 Oct 2026: the domain uses the name servers `ns1/ns2.urbanus.metanet.ch`.
 The active address book (DNS zone) is therefore in **Plesk** on the hosting, not in my.metanet.ch.
 
+> **Done on 8 Oct 2026 with option B.** The domain now uses Metanet DNS (`ch.pro.io`, `nl.pro.io`,
+> `p.dnh.net`). From now on, DNS changes are made **only in my.metanet.ch → DNS-Verwaltung**, not in Plesk.
+> All 19 records below were checked against the previous zone (including DKIM).
+
 There are two ways. **Option A is shorter and safer.**
 
 ---

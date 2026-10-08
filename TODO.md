@@ -50,7 +50,8 @@ In the code, open points are marked with `TODO`.
 - [x] Create the repository (`SamuelRenggli/Website`) and push
 - [x] Turn on GitHub Pages and test on `samuelrenggli.github.io/Website`
 - [x] Find out how email for `manuelstaehelin.ch` runs today (Metanet, via `mail.manuelstaehelin.ch`, not affected by the DNS change)
-- [ ] Change DNS records at Metanet, connect the domain on GitHub, enforce HTTPS
+- [x] Change DNS at Metanet (Metanet DNS since 8 Oct 2026, see DNS-METANET.md) and enter the domain on GitHub
+- [ ] Enforce HTTPS on GitHub (Settings, Pages) once the certificate is ready
 - [ ] Verify the domain on GitHub (TXT record) against takeover
 
 ### Setup
