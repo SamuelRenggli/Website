@@ -77,8 +77,13 @@ const seasons = [
 </section>
 
 <script>
+  import { getSeason, setSeason, onSeason } from '../season';
+
   const tablist = document.querySelector<HTMLElement>('[data-tabs]')!;
   const tabs = [...tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+  // Tab ids are German (#tab-sommer), season names English
+  const tabFor = (season: string) => tabs[season === 'summer' ? 1 : 0];
 
   const select = (tab: HTMLButtonElement, focus = true) => {
     for (const t of tabs) {
@@ -88,6 +93,7 @@ const seasons = [
       document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
     }
     if (focus) tab.focus();
+    setSeason(tab === tabs[1] ? 'summer' : 'winter');
   };
 
   tabs.forEach((tab, i) => {
@@ -100,9 +106,9 @@ const seasons = [
     });
   });
 
-  // Open the season that is currently running: summer from May to October
-  const month = new Date().getMonth();
-  if (month >= 4 && month <= 9) select(tabs[1], false);
+  // Open the season the hero shows (by date or chosen there)
+  select(tabFor(getSeason()), false);
+  onSeason((season) => select(tabFor(season), false));
 </script>
 
 <style>

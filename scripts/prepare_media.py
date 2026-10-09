@@ -99,22 +99,29 @@ Q = ['-x264-params', 'aq-mode=3']
 
 # (source, output, ffmpeg args) - all outputs without audio unless noted
 VIDEOS = [
-    # Hero background loop: muted, the full 17 s intro film (4K), three sizes
-    ('Intro_website.mp4', 'hero-1440.mp4', ['-vf', 'scale=2560:-2', '-an', '-crf', '22', *Q]),
-    ('Intro_website.mp4', 'hero-1080.mp4', ['-vf', 'scale=1920:-2', '-an', '-crf', '22', *Q]),
-    ('Intro_website.mp4', 'hero-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
+    # Hero background loop, one film per season (the switch in the hero picks one): muted, three sizes
+    ('Intro_website_winter.mp4', 'hero-winter-1440.mp4', ['-vf', 'scale=2560:-2', '-an', '-crf', '22', *Q]),
+    ('Intro_website_winter.mp4', 'hero-winter-1080.mp4', ['-vf', 'scale=1920:-2', '-an', '-crf', '22', *Q]),
+    ('Intro_website_winter.mp4', 'hero-winter-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
     # Phones in portrait: square centre crop of the 4K source, so less of the sides is lost
-    ('Intro_website.mp4', 'hero-mobile.mp4', ['-vf', 'crop=ih:ih,scale=1080:1080', '-an', '-crf', '23', *Q]),
-    # Vertical clips (played on demand)
-    ('20260205_133024.mp4', 'clip-pulver.mp4', ['-vf', 'scale=1080:-2', '-crf', '22', *Q, '-c:a', 'aac', '-b:a', '128k']),
+    ('Intro_website_winter.mp4', 'hero-winter-mobile.mp4', ['-vf', 'crop=ih:ih,scale=1080:1080', '-an', '-crf', '23', *Q]),
+    # Summer source is 1080p, so no 1440 size (the page uses the 1080 file there). It is 44 s of
+    # detailed rock, so a higher CRF: 27 looks the same at full screen at 12 MB instead of 30 MB
+    ('Intro_website_summer.mp4', 'hero-summer-1080.mp4', ['-an', '-crf', '27', *Q]),
+    ('Intro_website_summer.mp4', 'hero-summer-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '28', *Q]),
+    ('Intro_website_summer.mp4', 'hero-summer-mobile.mp4', ['-vf', 'crop=ih:ih', '-an', '-crf', '28', *Q]),
+    # Clips (played on demand). Drone, one line down an untouched slope: 4K landscape source, silent,
+    # first 10 s (empty slope) cut
+    ('Manu.mov', 'clip-linie.mp4', ['-ss', '10', '-vf', 'scale=1920:-2', '-an', '-crf', '23', *Q]),
     # Drone from above, 4K source, silent
     ('Sämi_Tälli1.mp4', 'clip-drohne-spuren.mp4', ['-vf', 'scale=1080:-2', '-an', '-crf', '22', *Q]),
 ]
 
 # poster frames: (video output, time, poster name)
 POSTERS = [
-    ('hero-1440.mp4', '0', 'hero-poster.jpg'),
-    ('clip-pulver.mp4', '1', 'clip-pulver.jpg'),
+    ('hero-winter-1440.mp4', '0', 'hero-winter-poster.jpg'),
+    ('hero-summer-1080.mp4', '0', 'hero-summer-poster.jpg'),
+    ('clip-linie.mp4', '26', 'clip-linie.jpg'),
     ('clip-drohne-spuren.mp4', '12', 'clip-drohne-spuren.jpg'),
 ]
 

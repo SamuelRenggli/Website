@@ -5,7 +5,7 @@ export const site = {
   name: 'Manuel Stähelin',
   person: 'Manuel Stähelin',
   // TODO: confirm address
-  email: 'info@manuelstaehelin.ch',
+  email: 'manuel.staehelin@bluewin.ch',
   // Phone number in international format, e.g. '+41 79 123 45 67'. Leave empty to hide it everywhere.
   phone: '',
   instagram: 'https://www.instagram.com/manuelstaehelin/',

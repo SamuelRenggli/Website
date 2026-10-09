@@ -16,10 +16,10 @@ const clips = [
     label: { de: 'Spuren im Pulver, von der Drohne aus', en: 'Tracks in powder, seen from the drone' },
   },
   {
-    file: 'clip-pulver',
-    ratio: '9 / 16',
-    grow: 0.5625,
-    label: { de: 'Pulverschnee unter tiefblauem Himmel', en: 'Powder under a deep blue sky' },
+    file: 'clip-linie',
+    ratio: '16 / 9',
+    grow: 1.7778,
+    label: { de: 'Eine Linie in unberührtem Pulver, von der Drohne aus', en: 'One line in untouched powder, seen from the drone' },
   },
 ];
 ---
@@ -33,7 +33,7 @@ const clips = [
     <ul class="reel">
       {
         clips.map((c) => (
-          <li style={`--ratio: ${c.ratio}; --grow: ${c.grow}`}>
+          <li class:list={[{ wide: c.grow > 1 }]} style={`--ratio: ${c.ratio}; --grow: ${c.grow}`}>
             <video
               src={url(`media/${c.file}.mp4`)}
               poster={url(`media/${c.file}.jpg`)}
@@ -154,6 +154,11 @@ const clips = [
       width: auto;
       max-height: 34rem;
       scroll-snap-align: center;
+    }
+    /* Landscape clips: full width of the screen instead of a very wide strip */
+    .reel li.wide {
+      width: calc(100vw - 2 * var(--gutter));
+      height: auto;
     }
   }
 </style>

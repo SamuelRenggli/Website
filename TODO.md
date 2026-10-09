@@ -8,7 +8,7 @@ In the code, open points are marked with `TODO`.
 ## Questions for Manu (before going live)
 
 ### Contact and legal
-- [ ] **Email address:** is `info@manuelstaehelin.ch` correct, and does that mailbox exist?
+- [x] **Email address:** `manuel.staehelin@bluewin.ch`
       → `src/config.ts` (`email`)
 - [ ] **Phone number:** show one on the website, or not? If yes, which (e.g. `+41 79 …`)?
       Empty = hidden everywhere. → `src/config.ts` (`phone`)

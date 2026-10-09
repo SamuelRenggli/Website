@@ -9,6 +9,18 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const home = localePath(lang);
+
+// Each source has a winter and a summer file; the summer film has no 1440 size
+const sources = [
+  { media: '(max-width: 900px) and (orientation: portrait)', winter: 'mobile', summer: 'mobile' },
+  { media: '(max-width: 900px)', winter: '720', summer: '720' },
+  { media: '(max-width: 1600px)', winter: '1080', summer: '1080' },
+  { media: undefined, winter: '1440', summer: '1080' },
+];
+const seasons = [
+  { id: 'winter', label: t.offers.winter, icon: 'snowflake' },
+  { id: 'summer', label: t.offers.summer, icon: 'sun' },
+];
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -19,15 +31,35 @@ const home = localePath(lang);
     loop
     playsinline
     preload="metadata"
-    poster={url('media/hero-poster.jpg')}
+    poster={url('media/hero-winter-poster.jpg')}
     aria-hidden="true"
     data-hero-video
+    data-poster-winter={url('media/hero-winter-poster.jpg')}
+    data-poster-summer={url('media/hero-summer-poster.jpg')}
   >
-    <source src={url('media/hero-mobile.mp4')} type="video/mp4" media="(max-width: 900px) and (orientation: portrait)" />
-    <source src={url('media/hero-720.mp4')} type="video/mp4" media="(max-width: 900px)" />
-    <source src={url('media/hero-1080.mp4')} type="video/mp4" media="(max-width: 1600px)" />
-    <source src={url('media/hero-1440.mp4')} type="video/mp4" />
+    {
+      sources.map((s) => (
+        <source
+          src={url(`media/hero-winter-${s.winter}.mp4`)}
+          type="video/mp4"
+          media={s.media}
+          data-winter={url(`media/hero-winter-${s.winter}.mp4`)}
+          data-summer={url(`media/hero-summer-${s.summer}.mp4`)}
+        />
+      ))
+    }
   </video>
+  <script is:inline>
+    // Runs while the page is parsed, before the video picks a file: summer film from May to October
+    (() => {
+      const m = new Date().getMonth();
+      const season = m >= 4 && m <= 9 ? 'summer' : 'winter';
+      document.documentElement.dataset.season = season;
+      const video = document.querySelector('[data-hero-video]');
+      video.poster = video.dataset['poster' + (season === 'summer' ? 'Summer' : 'Winter')];
+      for (const s of video.querySelectorAll('source')) s.src = s.dataset[season];
+    })();
+  </script>
   <div class="scrim"></div>
 
   <div class="content wrap">
@@ -37,6 +69,17 @@ const home = localePath(lang);
       <a class="btn btn-primary" href={`${home}#kontakt`}>{t.cta}</a>
       <a class="btn btn-quiet" href={`${home}#angebot`}>{t.hero.secondary}</a>
     </div>
+  </div>
+
+  <div class="season" role="group" aria-label={t.offers.seasonLabel} data-season-switch>
+    {
+      seasons.map((s) => (
+        <button type="button" aria-pressed={s.id === 'winter' ? 'true' : 'false'} data-season={s.id}>
+          <Icon name={s.icon} />
+          {s.label}
+        </button>
+      ))
+    }
   </div>
 
   <button
@@ -54,6 +97,8 @@ const home = localePath(lang);
 </section>
 
 <script>
+  import { getSeason, setSeason, onSeason, type Season } from '../season';
+
   const video = document.querySelector<HTMLVideoElement>('[data-hero-video]')!;
   const btn = document.querySelector<HTMLButtonElement>('[data-hero-pause]')!;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -87,6 +132,22 @@ const home = localePath(lang);
     held = !video.paused;
     if (held) video.pause();
     else video.play().catch(() => {});
+  });
+
+  // Season switch: swap the film, keep playing unless paused on purpose
+  const seasonBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-season-switch] button')];
+  const showSeason = (season: Season) => {
+    for (const b of seasonBtns) b.setAttribute('aria-pressed', String(b.dataset.season === season));
+  };
+  showSeason(getSeason());
+  for (const b of seasonBtns) b.addEventListener('click', () => setSeason(b.dataset.season as Season));
+  onSeason((season) => {
+    showSeason(season);
+    video.poster = season === 'summer' ? video.dataset.posterSummer! : video.dataset.posterWinter!;
+    for (const s of video.querySelectorAll('source')) s.src = s.dataset[season]!;
+    video.autoplay = false;
+    video.load();
+    if (!held) video.play().catch(() => {});
   });
 </script>
 
@@ -153,6 +214,41 @@ const home = localePath(lang);
     background: rgb(15 38 56 / 0.6);
   }
 
+  /* Season switch, top right under the header */
+  .season {
+    position: absolute;
+    top: calc(4.25rem + 1rem);
+    right: var(--gutter);
+    display: inline-flex;
+    padding: 0.25rem;
+    border: 1.5px solid rgb(255 255 255 / 0.6);
+    border-radius: var(--pill);
+    background: rgb(15 38 56 / 0.35);
+    backdrop-filter: blur(6px);
+  }
+  .season button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 1rem;
+    border: 0;
+    border-radius: var(--pill);
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 180ms ease;
+  }
+  .season button:hover {
+    background: rgb(255 255 255 / 0.15);
+  }
+  .season button[aria-pressed='true'] {
+    background: var(--signal);
+    color: var(--on-signal);
+  }
+
   @keyframes fade {
     from {
       opacity: 0;
@@ -185,6 +281,16 @@ const home = localePath(lang);
     .pause {
       top: 5rem;
       bottom: auto;
+    }
+    /* Next to the pause button */
+    .season {
+      top: 5rem;
+      right: calc(var(--gutter) + 2.75rem + 0.5rem);
+      padding: 0.15rem;
+    }
+    .season button {
+      min-height: 2.25rem;
+      padding: 0.3rem 0.8rem;
     }
   }
 </style>
