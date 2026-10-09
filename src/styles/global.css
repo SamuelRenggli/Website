@@ -8,7 +8,7 @@
 /*
   Design tokens
   Palette is taken from the photos: snow, glacier ice, the deep blue of high-altitude sky,
-  rock grey, and the signal orange of Manu's jacket as the single accent.
+  rock grey, and the glacier-crevasse blue as the single accent.
   Shape rule: photos and panels are square-cornered; interactive controls are full pills.
 */
 :root {
@@ -17,8 +17,8 @@
   --ink: #0f2638;
   --rock: #4f5d68;
   --line: rgb(15 38 56 / 0.14);
-  --signal: #f07428;
-  --on-signal: #0f2638;
+  --signal: #1b6f96;
+  --on-signal: #ffffff;
 
   --bg: var(--snow);
   --surface: var(--ice);
@@ -50,6 +50,8 @@
     --text: #e9eff3;
     --muted: #9fb0bd;
     --line: rgb(233 239 243 / 0.14);
+    --signal: #5aa9d1;
+    --on-signal: #0f2638;
     color-scheme: dark;
   }
 }
@@ -188,7 +190,7 @@ a {
 }
 
 .btn-primary:hover {
-  background: #f68a45;
+  background: color-mix(in oklab, var(--signal) 85%, var(--text));
 }
 
 .btn-quiet {
