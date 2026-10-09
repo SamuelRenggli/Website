@@ -55,7 +55,7 @@ export const ui = {
       avbUrl: 'https://sbv-asgm.ch/wp-content/uploads/6_AVB_de_20220131.pdf',
     },
     about: {
-      title: 'Ich bin Manuel, dein Bergführer.',
+      title: 'Über mich',
       lede: 'Bergführer, Ingenieur und am liebsten dort, wo die Spur noch frisch ist.',
       p1: 'Schon früh zog es mich in die Berge: Mit sechs Jahren stand ich mit meinem Vater auf dem Piz Kesch, meiner ersten Bergtour. Nach dem Gymnasium und dem Maschinenbaustudium an der ETH habe ich mich für die Ausbildung zum Bergführer entschieden.',
       p2: 'Sicherheit am Berg steht für mich an erster Stelle. Ich plane jede Tour nach den aktuellen Verhältnissen und nach dem, was du dir vorstellst, damit du unterwegs etwas lernst und den Tag am Berg geniesst.',
@@ -149,7 +149,7 @@ export const ui = {
       avbUrl: 'https://sbv-asgm.ch/wp-content/uploads/6_AVB_de_20220131.pdf',
     },
     about: {
-      title: 'I’m Manuel, your mountain guide.',
+      title: 'About me',
       lede: 'Mountain guide, engineer, and happiest where the track is still fresh.',
       p1: 'The mountains pulled me in early: at six I climbed Piz Kesch with my father, my first mountain tour. After high school and a degree in mechanical engineering at ETH Zurich, I decided to train as a mountain guide.',
       p2: 'Safety in the mountains comes first for me. I plan every tour around current conditions and what you have in mind, so you learn something along the way and enjoy your day out.',
