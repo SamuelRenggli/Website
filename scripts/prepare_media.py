@@ -105,11 +105,11 @@ VIDEOS = [
     ('Intro_website_winter.mp4', 'hero-winter-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '24', *Q]),
     # Phones in portrait: square centre crop of the 4K source, so less of the sides is lost
     ('Intro_website_winter.mp4', 'hero-winter-mobile.mp4', ['-vf', 'crop=ih:ih,scale=1080:1080', '-an', '-crf', '23', *Q]),
-    # Summer source is 1080p, so no 1440 size (the page uses the 1080 file there). It is 44 s of
-    # detailed rock, so a higher CRF: 27 looks the same at full screen at 12 MB instead of 30 MB
-    ('Intro_website_summer.mp4', 'hero-summer-1080.mp4', ['-an', '-crf', '27', *Q]),
-    ('Intro_website_summer.mp4', 'hero-summer-720.mp4', ['-vf', 'scale=1280:-2', '-an', '-crf', '28', *Q]),
-    ('Intro_website_summer.mp4', 'hero-summer-mobile.mp4', ['-vf', 'crop=ih:ih', '-an', '-crf', '28', *Q]),
+    # Summer source is 1080p, so no 1440 size (the page uses the 1080 file there). Only the first
+    # 25 s (up to and with second 24) are used. Detailed rock, so a higher CRF: 27 looks the same at full screen
+    ('Intro_website_summer.mp4', 'hero-summer-1080.mp4', ['-t', '25', '-an', '-crf', '27', *Q]),
+    ('Intro_website_summer.mp4', 'hero-summer-720.mp4', ['-t', '25', '-vf', 'scale=1280:-2', '-an', '-crf', '28', *Q]),
+    ('Intro_website_summer.mp4', 'hero-summer-mobile.mp4', ['-t', '25', '-vf', 'crop=ih:ih', '-an', '-crf', '28', *Q]),
     # Clips (played on demand). Drone, one line down an untouched slope: 4K landscape source, silent,
     # first 10 s (empty slope) cut
     ('Manu.mov', 'clip-linie.mp4', ['-ss', '10', '-vf', 'scale=1920:-2', '-an', '-crf', '23', *Q]),
