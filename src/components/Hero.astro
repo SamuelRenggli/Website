@@ -76,7 +76,7 @@ const seasons = [
       seasons.map((s) => (
         <button type="button" aria-pressed={s.id === 'winter' ? 'true' : 'false'} data-season={s.id}>
           <Icon name={s.icon} />
-          {s.label}
+          <span class="label">{s.label}</span>
         </button>
       ))
     }
@@ -282,15 +282,26 @@ const seasons = [
       top: 5rem;
       bottom: auto;
     }
-    /* Next to the pause button */
+    /* Icons only, stacked under the pause button and as wide as it, so little of the video is covered */
     .season {
-      top: 5rem;
-      right: calc(var(--gutter) + 2.75rem + 0.5rem);
+      top: calc(5rem + 2.75rem + 0.5rem);
+      flex-direction: column;
+      gap: 0.15rem;
+      width: 2.75rem;
       padding: 0.15rem;
     }
     .season button {
+      justify-content: center;
       min-height: 2.25rem;
-      padding: 0.3rem 0.8rem;
+      padding: 0;
+    }
+    .season .label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 </style>
