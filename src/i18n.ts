@@ -57,12 +57,12 @@ export const ui = {
     about: {
       title: 'Über mich',
       lede: 'Bergführer, Ingenieur und am liebsten dort, wo die Spur noch frisch ist.',
-      p1: 'Schon früh zog es mich in die Berge: Mit sechs Jahren stand ich mit meinem Vater auf dem Piz Kesch, meiner ersten Bergtour. Nach dem Gymnasium und dem Maschinenbaustudium an der ETH habe ich mich für die Ausbildung zum Bergführer entschieden.',
-      p2: 'Sicherheit am Berg steht für mich an erster Stelle. Ich plane jede Tour nach den aktuellen Verhältnissen und nach dem, was du dir vorstellst, damit du unterwegs etwas lernst und den Tag am Berg geniesst.',
-      facts: [
-        ['Erste Bergtour', 'Piz Kesch, mit 6 Jahren'],
-        ['Studium', 'Maschinenbau, ETH Zürich'],
-        ['Heute', 'Bergführer in den Schweizer Alpen'],
+      paragraphs: [
+        'Geboren bin ich 1995 in Basel. Nach einem Abstecher nach Zürich fürs Ingenieurstudium zog es mich ins gemütlichere Bern. Heute lebe ich hier mit meiner Familie auf halbem Weg zum Gurten. Neben meiner Tätigkeit als Bergführer arbeite ich als Ingenieur in der ÖV-Branche.',
+        'Die Berge begleiten mich schon seit meiner Kindheit. Noch bevor ich laufen konnte, trug mich mein Vater auf dem Rücken in die Bergwelt. Und schon damals quittierte ich die Schwünge im Schnee gerne mit einem Freudenjuchzer. Die Faszination für die Weite und Vielfalt der Berge hat mich seither nie mehr losgelassen. Oft zog es mich deshalb in die Berge, zuerst mit der Familie und später mit der JO Basel und Freund*innen. Ich absolvierte diverse Jugend+Sport-Leiterkurse und entdeckte dabei den Spass an der Führungsaufgabe. Diese Freude und die Möglichkeit, draussen in der Bergwelt mit Menschen arbeiten zu können, bewogen mich später dazu, die Bergführerausbildung zu absolvieren.',
+        'Als Bergführer ist es mein Ziel, den Gästen mit meiner ruhigen und einfühlsamen Art einen sicheren Rahmen zu bieten und sie im Erreichen ihrer Ziele zu unterstützen. Am Ende des Tages ist es oft nicht die technische Herausforderung, sondern vielmehr das gemeinsame Erlebnis, was es für mich ausmacht.',
+        'Ich liebe es, die unterschiedlichen Jahreszeiten und die damit abwechslungsreichen Verhältnisse in den Bergen auf alle möglichen Arten zu erleben. Genauso gerne verbringe ich aber auch Zeit mit meiner Familie und Freund*innen bei einem Spiel, beim Musikmachen oder einem Aareschwumm.',
+        'Meine Stärken liegen darin, auch in brenzligen Situationen Ruhe zu bewahren, sowie in meiner Geduld und Einfühlsamkeit im Umgang mit Menschen. Und meine Schwäche? Ganz klar: eine grosse Liebe für Hüttenkuchen – wehe, es hat keinen mehr …',
       ],
       portraitAlt: 'Manuel Stähelin in oranger Jacke vor einem Wolkenmeer',
     },
@@ -151,12 +151,12 @@ export const ui = {
     about: {
       title: 'About me',
       lede: 'Mountain guide, engineer, and happiest where the track is still fresh.',
-      p1: 'The mountains pulled me in early: at six I climbed Piz Kesch with my father, my first mountain tour. After high school and a degree in mechanical engineering at ETH Zurich, I decided to train as a mountain guide.',
-      p2: 'Safety in the mountains comes first for me. I plan every tour around current conditions and what you have in mind, so you learn something along the way and enjoy your day out.',
-      facts: [
-        ['First summit', 'Piz Kesch, aged 6'],
-        ['Studied', 'Mechanical engineering, ETH Zurich'],
-        ['Today', 'Mountain guide in the Swiss Alps'],
+      paragraphs: [
+        'I was born in Basel in 1995. After a detour to Zurich to study engineering, I was drawn to the more laid-back city of Bern. Today I live here with my family, halfway up to the Gurten. Alongside my work as a mountain guide, I work as an engineer in public transport.',
+        'The mountains have been with me since childhood. Before I could even walk, my father carried me into the mountains on his back. Even then I liked to celebrate every turn in the snow with a whoop of joy. The vastness and variety of the mountains have fascinated me ever since. So I went to the mountains often, first with my family and later with the JO Basel youth group and friends. I took a number of Jugend+Sport leader courses and discovered how much I enjoy leading. That joy, and the chance to work with people outdoors in the mountains, later led me to train as a mountain guide.',
+        'As a guide, my aim is to give my guests a safe setting with my calm and empathetic manner, and to help them reach their goals. At the end of the day, it is often not the technical challenge but the shared experience that matters most to me.',
+        'I love experiencing the mountains in every season and in all their changing conditions, in every way possible. But I just as much enjoy time with my family and friends, over a game, making music or on a swim in the Aare.',
+        'My strengths are staying calm even in tricky situations, and my patience and empathy with people. And my weakness? Easy: a great love of hut cake. Woe betide the hut that has run out …',
       ],
       portraitAlt: 'Manuel Stähelin in an orange jacket above a sea of clouds',
     },

@@ -17,18 +17,7 @@ const t = ui[lang].about;
     <div class="text">
       <h2 id="about-title">{t.title}</h2>
       <p class="lede">{t.lede}</p>
-      <p>{t.p1}</p>
-      <p>{t.p2}</p>
-      <dl class="facts">
-        {
-          t.facts.map(([term, value]) => (
-            <div>
-              <dt>{term}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))
-        }
-      </dl>
+      {t.paragraphs.map((p) => <p>{p}</p>)}
       <a class="btn btn-quiet" href={`${localePath(lang)}#kontakt`}>{ui[lang].cta}</a>
     </div>
   </div>
@@ -63,32 +52,10 @@ const t = ui[lang].about;
   .text > p:not(.lede) {
     max-width: 62ch;
   }
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    width: 100%;
-    margin: 0.5rem 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
-  }
-  dt {
-    color: var(--muted);
-    font-size: var(--step--1);
-  }
-  dd {
-    margin: 0.2rem 0 0;
-    font-weight: 600;
-    line-height: 1.35;
-  }
   @media (max-width: 760px) {
     .portrait,
     .text {
       grid-column: 1 / -1;
-    }
-    .facts {
-      grid-template-columns: 1fr;
-      gap: 1rem;
     }
   }
 </style>
