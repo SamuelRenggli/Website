@@ -58,6 +58,8 @@ const seasons = [
       const video = document.querySelector('[data-hero-video]');
       video.poster = video.dataset['poster' + (season === 'summer' ? 'Summer' : 'Winter')];
       for (const s of video.querySelectorAll('source')) s.src = s.dataset[season];
+      // The browser may already have picked the winter file; a new source src alone is ignored
+      if (season === 'summer') video.load();
     })();
   </script>
   <div class="scrim"></div>
